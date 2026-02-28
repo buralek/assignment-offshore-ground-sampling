@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: backend
+
+application:
+  sample-thresholds:
+    unit-weight: 25
+    water-content: 100
+    shear-strength: 800
