@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Delete Sample</h2>
+
+<mat-dialog-content>
+  <p>Are you sure you want to delete sample</p>
+  <p class="sample-id">{{ sample.id }}</p>
+  <p>This action cannot be undone.</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="warn" (click)="confirm()">Delete</button>
+</mat-dialog-actions>
