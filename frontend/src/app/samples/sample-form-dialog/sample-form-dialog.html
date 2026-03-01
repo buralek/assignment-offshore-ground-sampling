@@ -1,0 +1,77 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Sample' : 'Add Sample' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form-grid">
+
+    <!-- Location -->
+    <mat-form-field appearance="outline">
+      <mat-label>Location</mat-label>
+      <mat-select formControlName="locationId">
+        @for (loc of data.locations; track loc.id) {
+          <mat-option [value]="loc.id">{{ loc.name }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.locationId.hasError('required') && form.controls.locationId.touched) {
+        <mat-error>Location is required</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Date + Time -->
+    <div class="date-time-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Date Collected</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker" />
+        <mat-datepicker #picker />
+        @if (form.controls.date.hasError('required') && form.controls.date.touched) {
+          <mat-error>Date is required</mat-error>
+        } @else if (form.controls.date.hasError('futureDate')) {
+          <mat-error>Date cannot be in the future</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Time</mat-label>
+        <input matInput type="time" step="0.001" formControlName="time" />
+        @if (form.controls.time.hasError('required') && form.controls.time.touched) {
+          <mat-error>Time is required</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Unit Weight -->
+    <mat-form-field appearance="outline">
+      <mat-label>Unit Weight (kN/m³)</mat-label>
+      <input matInput type="number" formControlName="unitWeight" />
+      @if (form.controls.unitWeight.invalid && form.controls.unitWeight.touched) {
+        <mat-error>Required, must be positive</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Water Content -->
+    <mat-form-field appearance="outline">
+      <mat-label>Water Content (%)</mat-label>
+      <input matInput type="number" formControlName="waterContent" />
+      @if (form.controls.waterContent.invalid && form.controls.waterContent.touched) {
+        <mat-error>Required, must be positive</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Shear Strength -->
+    <mat-form-field appearance="outline">
+      <mat-label>Shear Strength (kPa)</mat-label>
+      <input matInput type="number" formControlName="shearStrength" />
+      @if (form.controls.shearStrength.invalid && form.controls.shearStrength.touched) {
+        <mat-error>Required, must be positive</mat-error>
+      }
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="save()" [disabled]="form.invalid">
+    Save
+  </button>
+</mat-dialog-actions>
