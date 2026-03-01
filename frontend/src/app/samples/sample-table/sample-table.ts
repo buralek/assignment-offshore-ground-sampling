@@ -15,6 +15,7 @@ import { Sample } from '../../shared/models/sample.model';
 import { UnitSystem, UNIT_LABELS } from '../../shared/models/unit-system.model';
 import { MOCK_SAMPLE_PAGE } from '../../shared/mock-data';
 import { SampleFormDialogComponent } from '../sample-form-dialog/sample-form-dialog';
+import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog';
 
 const THRESHOLDS = { unitWeight: 25, waterContent: 100, shearStrength: 800 };
 
@@ -90,7 +91,9 @@ export class SampleTableComponent {
     });
   }
 
-  openDeleteDialog(_s: Sample): void { /* TODO */ }
+  openDeleteDialog(s: Sample): void {
+    this.dialog.open(DeleteConfirmDialogComponent, { data: s });
+  }
   retry(): void                      { /* TODO */ }
   loadMore(): void                   { /* TODO */ }
 }
