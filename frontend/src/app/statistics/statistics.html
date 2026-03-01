@@ -1,0 +1,31 @@
+<div class="stats-grid">
+
+  <mat-card class="stat-card">
+    <mat-card-content>
+      <span class="stat-label">Avg Water Content</span>
+      <span class="stat-value">{{ stats().averageWaterContent | number:'1.1-1' }} %</span>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card" [class.stat-alert]="stats().exceeded.unitWeight > 0">
+    <mat-card-content>
+      <span class="stat-label">Unit Weight exceeded</span>
+      <span class="stat-value">{{ stats().exceeded.unitWeight }} samples</span>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card" [class.stat-alert]="stats().exceeded.waterContent > 0">
+    <mat-card-content>
+      <span class="stat-label">Water Content exceeded</span>
+      <span class="stat-value">{{ stats().exceeded.waterContent }} samples</span>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card" [class.stat-alert]="stats().exceeded.shearStrength > 0">
+    <mat-card-content>
+      <span class="stat-label">Shear Strength exceeded</span>
+      <span class="stat-value">{{ stats().exceeded.shearStrength }} samples</span>
+    </mat-card-content>
+  </mat-card>
+
+</div>

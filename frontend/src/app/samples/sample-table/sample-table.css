@@ -1,0 +1,155 @@
+/* ── Host: must be block so mat-card fills parent width ──────────── */
+:host {
+  display: block;
+}
+
+/* ── Card wrapper ────────────────────────────────────────────────── */
+.table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ── Header row ──────────────────────────────────────────────────── */
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: inherit;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: flex-start;
+}
+
+.header-left button {
+  margin-top: 0.6rem;
+  background-color: var(--mat-button-toggle-selected-state-background-color);
+  color: #1a2332;
+  border: 1px solid #1a2332;
+}
+
+.table-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1a2332;
+}
+
+.table-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.location-filter {
+  width: 200px;
+}
+
+/* ── Table wrapper ───────────────────────────────────────────────── */
+.table-wrapper {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  padding: 0 1.5rem 1.25rem;
+  box-sizing: border-box;
+  background-color: inherit;
+}
+
+/* ── Table: fixed layout — column widths come from <colgroup> ──────── */
+.samples-table {
+  width: 100%;
+  table-layout: fixed;
+  background-color: inherit;
+}
+
+/* Actions column: never wrap button labels */
+:host ::ng-deep .samples-table .mat-column-actions {
+  white-space: nowrap !important;
+}
+
+/* Threshold violation: row */
+.violated-row {
+  background-color: #fffbeb;
+}
+
+.violated-row:hover {
+  background-color: #fef3c7 !important;
+}
+
+/* Threshold violation: individual cell */
+.exceeded-cell {
+  color: #b45309;
+  font-weight: 500;
+}
+
+.warn-icon {
+  font-size: 1rem;
+  height: 1rem;
+  width: 1rem;
+  color: #f59e0b;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+.actions-cell {
+  text-align: right;
+}
+
+/* ── Table states ────────────────────────────────────────────────── */
+.table-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+  color: #6b7280;
+}
+
+.state-icon {
+  font-size: 3rem;
+  height: 3rem;
+  width: 3rem;
+}
+
+.error-icon {
+  color: #dc2626;
+}
+
+/* ── Load more ───────────────────────────────────────────────────── */
+.load-more {
+  display: flex;
+  justify-content: center;
+  padding: 1.25rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-right {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .location-filter {
+    width: 100%;
+  }
+}
