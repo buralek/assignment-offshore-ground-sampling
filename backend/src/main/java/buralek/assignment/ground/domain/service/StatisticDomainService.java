@@ -3,15 +3,23 @@ package buralek.assignment.ground.domain.service;
 import buralek.assignment.ground.domain.model.Sample;
 import buralek.assignment.ground.domain.model.SampleStatistics;
 import buralek.assignment.ground.domain.model.Threshold;
+import buralek.assignment.ground.domain.port.SampleRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class StatisticDomainService {
+    private final SampleRepository sampleRepository;
 
-    public SampleStatistics calculate(List<Sample> samples, Threshold threshold) {
+    public SampleStatistics calculate(UUID locationId, Threshold threshold) {
+        List<Sample> samples = locationId != null
+                ? sampleRepository.findAllByLocationId(locationId)
+                : sampleRepository.findAll();
+
         double averageWaterContent = samples.stream()
                 .mapToDouble(Sample::getWaterContent)
                 .average()

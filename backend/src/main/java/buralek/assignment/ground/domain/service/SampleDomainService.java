@@ -4,6 +4,7 @@ import buralek.assignment.ground.domain.exception.LocationNotFoundException;
 import buralek.assignment.ground.domain.exception.SampleNotFoundException;
 import buralek.assignment.ground.domain.model.Location;
 import buralek.assignment.ground.domain.model.Sample;
+import buralek.assignment.ground.domain.model.SamplePage;
 import buralek.assignment.ground.domain.port.LocationRepository;
 import buralek.assignment.ground.domain.port.SampleRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,16 @@ public class SampleDomainService {
                 .waterContent(waterContent)
                 .shearStrength(shearStrength)
                 .build());
+    }
+
+    public SamplePage findPage(UUID locationId, Instant afterTimestamp, UUID afterId, int limit) {
+        List<Sample> fetched = sampleRepository.findPage(locationId, afterTimestamp, afterId, limit + 1);
+        boolean hasMore = fetched.size() > limit;
+        List<Sample> samples = hasMore ? fetched.subList(0, limit) : fetched;
+        return SamplePage.builder()
+                .samples(samples)
+                .hasMore(hasMore)
+                .build();
     }
 
     public void deleteById(UUID id) {

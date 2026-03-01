@@ -1,11 +1,13 @@
 package buralek.assignment.ground.application.service;
 
+import buralek.assignment.ground.application.dto.SamplePageResponse;
 import buralek.assignment.ground.application.dto.SampleRequest;
 import buralek.assignment.ground.application.dto.SampleResponse;
 import buralek.assignment.ground.application.mapper.SampleMapper;
 import buralek.assignment.ground.domain.exception.SampleNotFoundException;
 import buralek.assignment.ground.domain.model.Location;
 import buralek.assignment.ground.domain.model.Sample;
+import buralek.assignment.ground.domain.model.SamplePage;
 import buralek.assignment.ground.domain.service.SampleDomainService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,31 +85,6 @@ class SampleApplicationServiceImplTest {
     }
 
     @Test
-    @DisplayName("WHEN calling getAllSamples, THEN each domain sample is mapped and returned")
-    void getAllSamples1() {
-        Sample sample = buildSample();
-        SampleResponse response = buildSampleResponse();
-
-        when(sampleDomainService.findAll()).thenReturn(List.of(sample));
-        when(sampleMapper.toSampleResponse(sample)).thenReturn(response);
-
-        List<SampleResponse> result = sampleApplicationService.getAllSamples();
-
-        assertThat(result).containsExactly(response);
-        verify(sampleMapper).toSampleResponse(sample);
-    }
-
-    @Test
-    @DisplayName("WHEN calling getAllSamples and no samples exist, THEN an empty list is returned")
-    void getAllSamples2() {
-        when(sampleDomainService.findAll()).thenReturn(List.of());
-
-        List<SampleResponse> result = sampleApplicationService.getAllSamples();
-
-        assertThat(result).isEmpty();
-    }
-
-    @Test
     @DisplayName("WHEN calling getSampleById, THEN the domain sample is mapped and returned")
     void getSampleById1() {
         Sample sample = buildSample();
@@ -170,5 +147,42 @@ class SampleApplicationServiceImplTest {
         sampleApplicationService.deleteSample(SAMPLE_ID);
 
         verify(sampleDomainService).deleteById(SAMPLE_ID);
+    }
+
+    // ── getSamplesPage ────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("WHEN calling getSamplesPage with hasMore=false, THEN samples are mapped and nextCursor is null")
+    void getSamplesPage1() {
+        Sample sample = buildSample();
+        SampleResponse response = buildSampleResponse();
+        SamplePage page = SamplePage.builder().samples(List.of(sample)).hasMore(false).build();
+
+        when(sampleDomainService.findPage(null, null, null, 20)).thenReturn(page);
+        when(sampleMapper.toSampleResponse(sample)).thenReturn(response);
+
+        SamplePageResponse result = sampleApplicationService.getSamplesPage(null, null, null, 20);
+
+        assertThat(result.getData()).containsExactly(response);
+        assertThat(result.isHasMore()).isFalse();
+        assertThat(result.getNextCursor()).isNull();
+    }
+
+    @Test
+    @DisplayName("WHEN calling getSamplesPage with hasMore=true, THEN nextCursor is built from the last sample's timestamp and id")
+    void getSamplesPage2() {
+        Sample sample = buildSample();
+        SampleResponse response = buildSampleResponse();
+        SamplePage page = SamplePage.builder().samples(List.of(sample)).hasMore(true).build();
+
+        when(sampleDomainService.findPage(null, null, null, 20)).thenReturn(page);
+        when(sampleMapper.toSampleResponse(sample)).thenReturn(response);
+
+        SamplePageResponse result = sampleApplicationService.getSamplesPage(null, null, null, 20);
+
+        assertThat(result.isHasMore()).isTrue();
+        assertThat(result.getNextCursor()).isNotNull();
+        assertThat(result.getNextCursor().getAfterTimestamp()).isEqualTo(SAMPLING_INSTANT);
+        assertThat(result.getNextCursor().getAfterId()).isEqualTo(SAMPLE_ID);
     }
 }

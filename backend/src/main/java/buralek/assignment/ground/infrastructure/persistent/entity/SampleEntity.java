@@ -6,8 +6,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity(name = "sample")
+@Table(indexes = {
+        @Index(name = "idx_sample_timestamp_id", columnList = "timestamp ASC, id ASC"),
+        @Index(name = "idx_sample_location_timestamp_id", columnList = "location_id ASC, timestamp ASC, id ASC")
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SampleEntity {
