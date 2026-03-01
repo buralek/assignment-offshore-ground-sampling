@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, model, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { UnitToggleComponent } from '../unit-toggle/unit-toggle';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,9 +11,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Location } from '../../shared/models/location.model';
-import { Sample } from '../../shared/models/sample.model';
+import { Sample, SampleCursor, SampleRequest } from '../../shared/models/sample.model';
 import { UnitSystem, UNIT_LABELS } from '../../shared/models/unit-system.model';
-import { MOCK_SAMPLE_PAGE } from '../../shared/mock-data';
+import { FilterService } from '../../shared/services/filter.service';
+import { LocationService } from '../../shared/services/location.service';
+import { SampleService } from '../../shared/services/sample.service';
 import { SampleFormDialogComponent } from '../sample-form-dialog/sample-form-dialog';
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog';
 
@@ -32,16 +34,56 @@ const THRESHOLDS = { unitWeight: 25, waterContent: 100, shearStrength: 800 };
   styleUrl: './sample-table.css',
 })
 export class SampleTableComponent {
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog          = inject(MatDialog);
+  private readonly locationService = inject(LocationService);
+  private readonly sampleService   = inject(SampleService);
+  readonly filterService           = inject(FilterService);
 
-  readonly unitSystem    = signal<UnitSystem>('metric');
-  readonly locations     = input.required<Location[]>();
-  readonly samples       = input.required<Sample[]>();
-  readonly selectedLocationId = model<string | null>(null);
+  readonly unitSystem = signal<UnitSystem>('metric');
+  readonly locations  = signal<Location[]>([]);
+  readonly samples    = signal<Sample[]>([]);
+  readonly hasMore    = signal(false);
+  readonly loading    = signal(false);
+  readonly error      = signal(false);
+  private  nextCursor = signal<SampleCursor | null>(null);
 
-  private readonly loading = signal(false);
-  private readonly error   = signal(false);
-  readonly hasMore = signal(MOCK_SAMPLE_PAGE.hasMore);
+  constructor() {
+    this.locationService.getAll().subscribe(locs => this.locations.set(locs));
+
+    effect(() => {
+      const locId = this.filterService.selectedLocationId();
+      this.samples.set([]);
+      this.nextCursor.set(null);
+      this.loadPage(locId, null);
+    });
+  }
+
+  private loadPage(locId: string | null, cursor: SampleCursor | null): void {
+    this.loading.set(true);
+    this.error.set(false);
+    this.sampleService.getPage({ locationId: locId, cursor }).subscribe({
+      next: page => {
+        this.samples.update(prev => [...prev, ...page.data]);
+        this.hasMore.set(page.hasMore);
+        this.nextCursor.set(page.nextCursor);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set(true);
+        this.loading.set(false);
+      },
+    });
+  }
+
+  loadMore(): void {
+    this.loadPage(this.filterService.selectedLocationId(), this.nextCursor());
+  }
+
+  retry(): void {
+    this.samples.set([]);
+    this.nextCursor.set(null);
+    this.loadPage(this.filterService.selectedLocationId(), null);
+  }
 
   readonly displayColumns = ['id', 'location', 'date', 'unitWeight', 'waterContent', 'shearStrength', 'actions'];
 
@@ -82,18 +124,43 @@ export class SampleTableComponent {
   openAddDialog(): void {
     this.dialog.open(SampleFormDialogComponent, {
       data: { sample: null, locations: this.locations() },
+    }).afterClosed().subscribe((result: SampleRequest | undefined) => {
+      if (!result) return;
+      this.sampleService.create(result).subscribe({
+        next: () => {
+          this.samples.set([]);
+          this.nextCursor.set(null);
+          this.loadPage(this.filterService.selectedLocationId(), null);
+          this.filterService.bumpMutation();
+        },
+      });
     });
   }
 
   openEditDialog(s: Sample): void {
     this.dialog.open(SampleFormDialogComponent, {
       data: { sample: s, locations: this.locations() },
+    }).afterClosed().subscribe((result: SampleRequest | undefined) => {
+      if (!result) return;
+      this.sampleService.update(s.id, result).subscribe({
+        next: updated => {
+          this.samples.update(prev => prev.map(x => x.id === updated.id ? updated : x));
+          this.filterService.bumpMutation();
+        },
+      });
     });
   }
 
   openDeleteDialog(s: Sample): void {
-    this.dialog.open(DeleteConfirmDialogComponent, { data: s });
+    this.dialog.open(DeleteConfirmDialogComponent, { data: s })
+      .afterClosed().subscribe((confirmed: boolean) => {
+        if (!confirmed) return;
+        this.sampleService.remove(s.id).subscribe({
+          next: () => {
+            this.samples.update(prev => prev.filter(x => x.id !== s.id));
+            this.filterService.bumpMutation();
+          },
+        });
+      });
   }
-  retry(): void                      { /* TODO */ }
-  loadMore(): void                   { /* TODO */ }
 }
