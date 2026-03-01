@@ -122,13 +122,13 @@ class SampleControllerTest {
     }
 
     @Test
-    @DisplayName("WHEN calling getSampleById endpoint and the sample is not found, THEN 500 error is returned")
+    @DisplayName("WHEN calling getSampleById endpoint and the sample is not found, THEN 404 is returned")
     void getSampleById2() throws Exception {
         when(sampleApplicationService.getSampleById(SAMPLE_ID))
                 .thenThrow(new SampleNotFoundException(SAMPLE_ID));
 
         mockMvc.perform(get("/api/v1/samples/{id}", SAMPLE_ID))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isNotFound());
     }
 
     // ── PUT ──────────────────────────────────────────────────────────────────
@@ -146,7 +146,7 @@ class SampleControllerTest {
     }
 
     @Test
-    @DisplayName("WHEN calling updateSample endpoint and the sample is not found, THEN 500 error is returned")
+    @DisplayName("WHEN calling updateSample endpoint and the sample is not found, THEN 404 is returned")
     void updateSample2() throws Exception {
         when(sampleApplicationService.updateSample(eq(SAMPLE_ID), any()))
                 .thenThrow(new SampleNotFoundException(SAMPLE_ID));
@@ -154,7 +154,7 @@ class SampleControllerTest {
         mockMvc.perform(put("/api/v1/samples/{id}", SAMPLE_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(validRequestJson()))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -184,13 +184,13 @@ class SampleControllerTest {
     }
 
     @Test
-    @DisplayName("WHEN calling deleteSample endpoint and the sample is not found, THEN 500 error is returned")
+    @DisplayName("WHEN calling deleteSample endpoint and the sample is not found, THEN 404 is returned")
     void deleteSample2() throws Exception {
         doThrow(new SampleNotFoundException(SAMPLE_ID))
                 .when(sampleApplicationService).deleteSample(SAMPLE_ID);
 
         mockMvc.perform(delete("/api/v1/samples/{id}", SAMPLE_ID))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isNotFound());
     }
 
     // ── GET /page ─────────────────────────────────────────────────────────────
