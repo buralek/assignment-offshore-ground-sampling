@@ -50,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtEncoder
                 .encode(JwtEncoderParameters.from(header, claims))
                 .getTokenValue();
-
+        log.info("User [{}] login successfully.", request.getUsername());
         return TokenResponse.builder()
                 .token(token)
                 .expiresIn(expirationSeconds)
