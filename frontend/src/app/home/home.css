@@ -29,4 +29,6 @@
   flex-direction: column;
   gap: 1.25rem;
   box-sizing: border-box;
+  height: calc(100vh - 64px);
+  overflow: hidden;
 }

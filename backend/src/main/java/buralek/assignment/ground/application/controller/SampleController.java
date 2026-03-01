@@ -54,7 +54,7 @@ public class SampleController {
             @RequestParam(required = false) UUID locationId,
             @RequestParam(required = false) Instant afterTimestamp,
             @RequestParam(required = false) UUID afterId,
-            @RequestParam(defaultValue = "20") @Min(1) @Max(100) int limit) {
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int limit) {
         return sampleApplicationService.getSamplesPage(locationId, afterTimestamp, afterId, limit);
     }
 

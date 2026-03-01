@@ -15,7 +15,7 @@ export class SampleService {
   private readonly http = inject(HttpClient);
   private readonly base = `${environment.apiBaseUrl}/api/v1/samples`;
 
-  getPage({ locationId, cursor, limit = 20 }: GetPageParams = {}): Observable<SamplePage> {
+  getPage({ locationId, cursor, limit = 10 }: GetPageParams = {}): Observable<SamplePage> {
     let params = new HttpParams().set('limit', limit);
     if (locationId)        params = params.set('locationId',      locationId);
     if (cursor?.afterTimestamp) params = params.set('afterTimestamp', cursor.afterTimestamp);

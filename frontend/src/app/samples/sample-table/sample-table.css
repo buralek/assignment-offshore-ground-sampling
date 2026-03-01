@@ -1,12 +1,20 @@
-/* ── Host: must be block so mat-card fills parent width ──────────── */
+/* ── Host: fills remaining flex space in page-content ────────────── */
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* ── Card wrapper ────────────────────────────────────────────────── */
 .table-card {
   padding: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }
 
 /* ── Header row ──────────────────────────────────────────────────── */
@@ -60,8 +68,9 @@
 
 /* ── Table wrapper ───────────────────────────────────────────────── */
 .table-wrapper {
-  display: block;
-  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   overflow-x: auto;
   padding: 0 1.5rem 1.25rem;
   box-sizing: border-box;
