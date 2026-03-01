@@ -15,7 +15,9 @@
 }
 
 .logout-btn {
-  color: white;
+  background-color: var(--mat-button-toggle-selected-state-background-color);
+  color: #1a2332;
+  border: 1px solid #1a2332;
 }
 
 /* ── Page layout ─────────────────────────────────────────────────── */

@@ -17,6 +17,7 @@
   padding: 1.25rem 1.5rem 1rem;
   flex-wrap: wrap;
   gap: 1rem;
+  background-color: inherit;
 }
 
 .header-left {
@@ -28,6 +29,9 @@
 
 .header-left button {
   margin-top: 0.6rem;
+  background-color: var(--mat-button-toggle-selected-state-background-color);
+  color: #1a2332;
+  border: 1px solid #1a2332;
 }
 
 .table-title {
@@ -59,17 +63,21 @@
   display: block;
   width: 100%;
   overflow-x: auto;
+  padding: 0 1.5rem 1.25rem;
+  box-sizing: border-box;
+  background-color: inherit;
 }
 
-/* ── Table: native layout fills wrapper width ────────────────────── */
+/* ── Table: fixed layout — column widths come from <colgroup> ──────── */
 .samples-table {
   width: 100%;
+  table-layout: fixed;
+  background-color: inherit;
 }
 
-/* Actions column: shrink to button widths */
-.mat-column-actions {
-  width: 1%;
-  white-space: nowrap;
+/* Actions column: never wrap button labels */
+:host ::ng-deep .samples-table .mat-column-actions {
+  white-space: nowrap !important;
 }
 
 /* Threshold violation: row */
@@ -97,7 +105,6 @@
 }
 
 .actions-cell {
-  white-space: nowrap;
   text-align: right;
 }
 

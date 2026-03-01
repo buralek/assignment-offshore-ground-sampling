@@ -12,10 +12,10 @@ export const MOCK_LOCATIONS: Location[] = [
 
 export const MOCK_SAMPLES: Sample[] = [
   // North Site A — no violations
-  { id: 's-01', locationId: 'loc-1', timestampWithTimeZone: '2026-01-10T09:00:00+01:00', unitWeight: 18.5, waterContent: 45.2,  shearStrength: 120.0 },
-  { id: 's-02', locationId: 'loc-1', timestampWithTimeZone: '2026-01-15T11:30:00+01:00', unitWeight: 22.3, waterContent: 78.5,  shearStrength: 450.0 },
+  { id: 's-124e5792-c81e-454f-a27c-e2ec89956f79', locationId: 'loc-1', timestampWithTimeZone: '2026-01-10T09:00:00+01:00', unitWeight: 18.5, waterContent: 45.2,  shearStrength: 120.0 },
+  { id: 's-124e5792-c81e-454f-a27c-e2ec89956f79', locationId: 'loc-1', timestampWithTimeZone: '2026-01-15T11:30:00+01:00', unitWeight: 22.3, waterContent: 78.5,  shearStrength: 450.0 },
   // North Site A — unit weight violation
-  { id: 's-03', locationId: 'loc-1', timestampWithTimeZone: '2026-01-20T14:00:00+01:00', unitWeight: 26.1, waterContent: 89.3,  shearStrength: 650.0 },
+  { id: 's-0124e5792-c81e-454f-a27c-e2ec89956f7', locationId: 'loc-1', timestampWithTimeZone: '2026-01-20T14:00:00+01:00', unitWeight: 26.1, waterContent: 89.3,  shearStrength: 650.0 },
 
   // East Site B — water content violation
   { id: 's-04', locationId: 'loc-2', timestampWithTimeZone: '2026-02-05T08:15:00+01:00', unitWeight: 19.8, waterContent: 105.7, shearStrength: 320.0 },

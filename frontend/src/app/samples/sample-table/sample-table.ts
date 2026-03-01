@@ -1,6 +1,6 @@
 import { Component, computed, input, model, signal } from '@angular/core';
 import { UnitToggleComponent } from '../unit-toggle/unit-toggle';
-import { DatePipe, DecimalPipe, SlicePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +19,7 @@ const THRESHOLDS = { unitWeight: 25, waterContent: 100, shearStrength: 800 };
 @Component({
   selector: 'app-sample-table',
   imports: [
-    DatePipe, DecimalPipe, SlicePipe,
+    DatePipe, DecimalPipe,
     MatButtonModule, MatCardModule, MatFormFieldModule,
     MatIconModule, MatProgressSpinnerModule,
     MatSelectModule, MatTableModule, MatTooltipModule,

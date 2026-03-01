@@ -52,30 +52,42 @@
 
     @default {
       <table mat-table [dataSource]="samples()" class="samples-table">
+        <!--
+          colgroup drives column widths under table-layout:fixed.
+          id wider (shows more UUID), measurement cols narrower (header wraps).
+        -->
+        <colgroup>
+          <col style="width:16%"><!-- id -->
+          <col style="width:20%"><!-- location -->
+          <col style="width:12%"><!-- date -->
+          <col style="width:13%"><!-- unitWeight -->
+          <col style="width:12%"><!-- waterContent -->
+          <col style="width:14%"><!-- shearStrength -->
+          <col style="width:13%"><!-- actions -->
+        </colgroup>
 
         <!-- ID -->
         <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef>ID</th>
-          <td mat-cell *matCellDef="let s" [matTooltip]="s.id">{{ s.id | slice:0:8 }}…</td>
+          <th mat-header-cell *matHeaderCellDef style="white-space:normal">ID</th>
+          <td mat-cell *matCellDef="let s" [matTooltip]="s.id">{{ s.id }}</td>
         </ng-container>
 
         <!-- Location -->
         <ng-container matColumnDef="location">
-          <th mat-header-cell *matHeaderCellDef>Location</th>
-          <td mat-cell *matCellDef="let s">{{ getLocationName(s.locationId) }}</td>
+          <th mat-header-cell *matHeaderCellDef style="white-space:normal">Location</th>
+          <td mat-cell *matCellDef="let s" style="white-space:normal">{{ getLocationName(s.locationId) }}</td>
         </ng-container>
 
         <!-- Date -->
         <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef>Date Collected</th>
-          <td mat-cell *matCellDef="let s">{{ s.timestampWithTimeZone | date:'dd MMM yyyy' }}</td>
+          <th mat-header-cell *matHeaderCellDef style="white-space:normal">Date Collected</th>
+          <td mat-cell *matCellDef="let s" style="white-space:normal">{{ s.timestampWithTimeZone | date:'dd MMM yyyy' }}</td>
         </ng-container>
 
         <!-- Unit Weight -->
         <ng-container matColumnDef="unitWeight">
-          <th mat-header-cell *matHeaderCellDef>{{ columnLabels().unitWeight }}</th>
-          <td mat-cell *matCellDef="let s"
-              [class.exceeded-cell]="exceededIds().unitWeight.has(s.id)">
+          <th mat-header-cell *matHeaderCellDef style="white-space:normal">{{ columnLabels().unitWeight }}</th>
+          <td mat-cell *matCellDef="let s"              [class.exceeded-cell]="exceededIds().unitWeight.has(s.id)">
             {{ convertUnitWeight(s.unitWeight) | number:'1.1-1' }}
             @if (exceededIds().unitWeight.has(s.id)) {
               <mat-icon class="warn-icon" matTooltip="Exceeds threshold">warning</mat-icon>
@@ -85,9 +97,8 @@
 
         <!-- Water Content -->
         <ng-container matColumnDef="waterContent">
-          <th mat-header-cell *matHeaderCellDef>{{ columnLabels().waterContent }}</th>
-          <td mat-cell *matCellDef="let s"
-              [class.exceeded-cell]="exceededIds().waterContent.has(s.id)">
+          <th mat-header-cell *matHeaderCellDef style="white-space:normal">{{ columnLabels().waterContent }}</th>
+          <td mat-cell *matCellDef="let s"              [class.exceeded-cell]="exceededIds().waterContent.has(s.id)">
             {{ s.waterContent | number:'1.1-1' }}
             @if (exceededIds().waterContent.has(s.id)) {
               <mat-icon class="warn-icon" matTooltip="Exceeds threshold">warning</mat-icon>
@@ -97,9 +108,8 @@
 
         <!-- Shear Strength -->
         <ng-container matColumnDef="shearStrength">
-          <th mat-header-cell *matHeaderCellDef>{{ columnLabels().shearStrength }}</th>
-          <td mat-cell *matCellDef="let s"
-              [class.exceeded-cell]="exceededIds().shearStrength.has(s.id)">
+          <th mat-header-cell *matHeaderCellDef style="white-space:normal">{{ columnLabels().shearStrength }}</th>
+          <td mat-cell *matCellDef="let s"              [class.exceeded-cell]="exceededIds().shearStrength.has(s.id)">
             {{ convertShearStrength(s.shearStrength) | number:'1.1-1' }}
             @if (exceededIds().shearStrength.has(s.id)) {
               <mat-icon class="warn-icon" matTooltip="Exceeds threshold">warning</mat-icon>
