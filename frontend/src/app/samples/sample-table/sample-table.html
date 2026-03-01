@@ -14,7 +14,7 @@
       <app-unit-toggle [value]="unitSystem()" (valueChange)="unitSystem.set($event)" />
       <mat-form-field appearance="outline" class="location-filter" subscriptSizing="dynamic">
         <mat-label>Location</mat-label>
-        <mat-select [value]="selectedLocationId()" (selectionChange)="selectedLocationId.set($event.value)">
+        <mat-select [value]="filterService.selectedLocationId()" (selectionChange)="filterService.selectedLocationId.set($event.value)">
           <mat-option [value]="null">All Locations</mat-option>
           @for (loc of locations(); track loc.id) {
             <mat-option [value]="loc.id">{{ loc.name }}</mat-option>
