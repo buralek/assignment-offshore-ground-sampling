@@ -4,6 +4,7 @@ import buralek.assignment.ground.domain.exception.LocationNotFoundException;
 import buralek.assignment.ground.domain.exception.SampleNotFoundException;
 import buralek.assignment.ground.domain.model.Location;
 import buralek.assignment.ground.domain.model.Sample;
+import buralek.assignment.ground.domain.model.SamplePage;
 import buralek.assignment.ground.domain.port.LocationRepository;
 import buralek.assignment.ground.domain.port.SampleRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -201,6 +202,44 @@ class SampleDomainServiceTest {
                 .hasMessageContaining(LOCATION_ID.toString());
 
         verify(sampleRepository, never()).save(any());
+    }
+
+    // ── findPage ──────────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("WHEN calling findPage and result count equals limit, THEN hasMore is false and all samples are returned")
+    void findPage1() {
+        Sample s1 = buildSample();
+        Sample s2 = buildSample();
+        when(sampleRepository.findPage(null, null, null, 3)).thenReturn(List.of(s1, s2));
+
+        SamplePage result = sampleDomainService.findPage(null, null, null, 2);
+
+        assertThat(result.isHasMore()).isFalse();
+        assertThat(result.getSamples()).containsExactly(s1, s2);
+    }
+
+    @Test
+    @DisplayName("WHEN calling findPage and result count exceeds limit, THEN hasMore is true and only limit samples are returned")
+    void findPage2() {
+        Sample s1 = buildSample();
+        Sample s2 = buildSample();
+        when(sampleRepository.findPage(null, null, null, 2)).thenReturn(List.of(s1, s2));
+
+        SamplePage result = sampleDomainService.findPage(null, null, null, 1);
+
+        assertThat(result.isHasMore()).isTrue();
+        assertThat(result.getSamples()).containsExactly(s1);
+    }
+
+    @Test
+    @DisplayName("WHEN calling findPage with a cursor, THEN the cursor values are forwarded to the repository with limit+1")
+    void findPage3() {
+        when(sampleRepository.findPage(null, DATE, SAMPLE_ID, 21)).thenReturn(List.of());
+
+        sampleDomainService.findPage(null, DATE, SAMPLE_ID, 20);
+
+        verify(sampleRepository).findPage(null, DATE, SAMPLE_ID, 21);
     }
 
     // ── deleteById ────────────────────────────────────────────────────────────

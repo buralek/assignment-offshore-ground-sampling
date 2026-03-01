@@ -9,8 +9,10 @@ import buralek.assignment.ground.infrastructure.persistent.repository.LocationJp
 import buralek.assignment.ground.infrastructure.persistent.repository.SampleJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,6 +56,14 @@ public class SamplePersistentRepository implements SampleRepository {
         return sampleJpaRepository.findByLocationId(locationId).stream()
                 .map(entityMapper::toSampleModel)
                 .toList();
+    }
+
+    @Override
+    public List<Sample> findPage(UUID locationId, Instant afterTimestamp, UUID afterId, int limit) {
+        List<SampleEntity> entities = afterTimestamp == null
+                ? sampleJpaRepository.findFirstPage(locationId, Limit.of(limit))
+                : sampleJpaRepository.findNextPage(locationId, afterTimestamp, afterId, Limit.of(limit));
+        return entities.stream().map(entityMapper::toSampleModel).toList();
     }
 
     @Override

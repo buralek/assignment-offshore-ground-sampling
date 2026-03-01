@@ -179,4 +179,71 @@ class SamplePersistentRepositoryTest {
         assertThatNoException()
                 .isThrownBy(() -> samplePersistentRepository.deleteById(UUID.randomUUID()));
     }
+
+    // ── findPage ──────────────────────────────────────────────────────────────
+
+    private SampleEntity persistSampleAt(Instant timestamp) {
+        entityManager.clear();
+        LocationEntity managed = entityManager.find(LocationEntity.class, locationEntity.getId());
+        return entityManager.persistAndFlush(new SampleEntity(managed, timestamp, ZONE_ID, 10.0, 20.0, 30.0));
+    }
+
+    @Test
+    @DisplayName("WHEN calling findPage with no cursor, THEN samples are returned in ascending timestamp order")
+    void findPage1() {
+        Instant earlier = Instant.ofEpochSecond(1_000_000);
+        Instant later = Instant.ofEpochSecond(2_000_000);
+        persistSampleAt(later);
+        persistSampleAt(earlier);
+
+        List<Sample> result = samplePersistentRepository.findPage(null, null, null, 10);
+
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getTimestamp()).isEqualTo(earlier);
+        assertThat(result.get(1).getTimestamp()).isEqualTo(later);
+    }
+
+    @Test
+    @DisplayName("WHEN calling findPage with a cursor, THEN only samples after the cursor are returned")
+    void findPage2() {
+        Instant t1 = Instant.ofEpochSecond(1_000_000);
+        Instant t2 = Instant.ofEpochSecond(2_000_000);
+        SampleEntity s1 = persistSampleAt(t1);
+        persistSampleAt(t2);
+
+        List<Sample> result = samplePersistentRepository.findPage(null, s1.getTimestamp(), s1.getId(), 10);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.getFirst().getTimestamp()).isEqualTo(t2);
+    }
+
+    @Test
+    @DisplayName("WHEN calling findPage with a limit smaller than total samples, THEN no more than limit samples are returned")
+    void findPage3() {
+        persistSampleAt(Instant.ofEpochSecond(1_000_000));
+        persistSampleAt(Instant.ofEpochSecond(2_000_000));
+        persistSampleAt(Instant.ofEpochSecond(3_000_000));
+
+        List<Sample> result = samplePersistentRepository.findPage(null, null, null, 2);
+
+        assertThat(result).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("WHEN calling findPage with a locationId, THEN only samples from that location are returned")
+    void findPage4() {
+        LocationEntity otherLocation = entityManager.persistAndFlush(
+                new LocationEntity("South Sea Platform B", ZONE_ID, 51.0, 3.0));
+
+        persistSampleAt(Instant.ofEpochSecond(1_000_000));
+
+        entityManager.clear();
+        LocationEntity managedOther = entityManager.find(LocationEntity.class, otherLocation.getId());
+        entityManager.persistAndFlush(new SampleEntity(managedOther, Instant.ofEpochSecond(2_000_000), ZONE_ID, 10.0, 20.0, 30.0));
+
+        List<Sample> result = samplePersistentRepository.findPage(locationEntity.getId(), null, null, 10);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.getFirst().getLocation().getId()).isEqualTo(locationEntity.getId());
+    }
 }

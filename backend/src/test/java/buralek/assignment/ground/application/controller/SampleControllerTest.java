@@ -1,5 +1,7 @@
 package buralek.assignment.ground.application.controller;
 
+import buralek.assignment.ground.application.dto.SampleCursor;
+import buralek.assignment.ground.application.dto.SamplePageResponse;
 import buralek.assignment.ground.application.dto.SampleResponse;
 import buralek.assignment.ground.application.service.SampleApplicationService;
 import buralek.assignment.ground.domain.exception.SampleNotFoundException;
@@ -11,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -106,41 +109,6 @@ class SampleControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    // ── GET all ──────────────────────────────────────────────────────────────
-
-    @Test
-    @DisplayName("WHEN calling getAllSamples endpoint, THEN a list of all samples is returned")
-    void getAllSamples1() throws Exception {
-        when(sampleApplicationService.getAllSamples()).thenReturn(List.of(buildSampleResponse()));
-
-        String expectedJson = """
-                [
-                  {
-                    "id": "%s",
-                    "locationId": "%s",
-                    "timestampWithTimeZone": "%s",
-                    "unitWeight": 18.7,
-                    "waterContent": 22.4,
-                    "shearStrength": 35.8
-                  }
-                ]
-                """.formatted(SAMPLE_ID, LOCATION_ID, SAMPLING_DATE);
-
-        mockMvc.perform(get("/api/v1/samples"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedJson));
-    }
-
-    @Test
-    @DisplayName("WHEN calling getAllSamples endpoint and no samples exist, THEN an empty list is returned")
-    void getAllSamples2() throws Exception {
-        when(sampleApplicationService.getAllSamples()).thenReturn(List.of());
-
-        mockMvc.perform(get("/api/v1/samples"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
-    }
-
     // ── GET by id ────────────────────────────────────────────────────────────
 
     @Test
@@ -223,5 +191,78 @@ class SampleControllerTest {
 
         mockMvc.perform(delete("/api/v1/samples/{id}", SAMPLE_ID))
                 .andExpect(status().is5xxServerError());
+    }
+
+    // ── GET /page ─────────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("WHEN calling getSamplesPage with no cursor, THEN first page is returned with hasMore=false and no nextCursor")
+    void getSamplesPage1() throws Exception {
+        SamplePageResponse pageResponse = SamplePageResponse.builder()
+                .data(List.of(buildSampleResponse()))
+                .hasMore(false)
+                .nextCursor(null)
+                .build();
+
+        when(sampleApplicationService.getSamplesPage(null, null, null, 20)).thenReturn(pageResponse);
+
+        String expectedJson = """
+                {
+                  "data": [
+                    {
+                      "id": "%s",
+                      "locationId": "%s",
+                      "timestampWithTimeZone": "%s",
+                      "unitWeight": 18.7,
+                      "waterContent": 22.4,
+                      "shearStrength": 35.8
+                    }
+                  ],
+                  "hasMore": false
+                }
+                """.formatted(SAMPLE_ID, LOCATION_ID, SAMPLING_DATE);
+
+        mockMvc.perform(get("/api/v1/samples/page"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedJson));
+    }
+
+    @Test
+    @DisplayName("WHEN calling getSamplesPage with cursor params, THEN next page is returned with hasMore=true and nextCursor")
+    void getSamplesPage2() throws Exception {
+        Instant afterTimestamp = Instant.parse(SAMPLING_INSTANT);
+        SampleCursor nextCursor = SampleCursor.builder()
+                .afterTimestamp(afterTimestamp)
+                .afterId(SAMPLE_ID)
+                .build();
+        SamplePageResponse pageResponse = SamplePageResponse.builder()
+                .data(List.of(buildSampleResponse()))
+                .hasMore(true)
+                .nextCursor(nextCursor)
+                .build();
+
+        when(sampleApplicationService.getSamplesPage(null, afterTimestamp, SAMPLE_ID, 20)).thenReturn(pageResponse);
+
+        mockMvc.perform(get("/api/v1/samples/page")
+                        .param("afterTimestamp", SAMPLING_INSTANT)
+                        .param("afterId", SAMPLE_ID.toString()))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                          "hasMore": true,
+                          "nextCursor": {
+                            "afterTimestamp": "%s",
+                            "afterId": "%s"
+                          }
+                        }
+                        """.formatted(SAMPLING_INSTANT, SAMPLE_ID)));
+    }
+
+    @Test
+    @DisplayName("WHEN calling getSamplesPage with a limit exceeding the maximum, THEN 400 is returned")
+    void getSamplesPage3() throws Exception {
+        mockMvc.perform(get("/api/v1/samples/page")
+                        .param("limit", "101"))
+                .andExpect(status().is4xxClientError());
     }
 }
