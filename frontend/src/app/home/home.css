@@ -1,16 +1,30 @@
-.title {
+/* ── Toolbar ─────────────────────────────────────────────────────── */
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.toolbar-title {
   font-size: 1.1rem;
   font-weight: 500;
 }
 
-.spacer {
+.flex-spacer {
   flex: 1;
 }
 
-.placeholder {
+.logout-btn {
+  color: white;
+}
+
+/* ── Page layout ─────────────────────────────────────────────────── */
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: calc(100vh - 64px);
-  color: #6b7280;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-sizing: border-box;
 }

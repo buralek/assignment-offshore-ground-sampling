@@ -1,11 +1,17 @@
-<mat-toolbar color="primary">
-  <span class="title">Ground Sampling Management</span>
-  <span class="spacer"></span>
-  <button mat-icon-button (click)="logout()" aria-label="Logout">
+<mat-toolbar color="primary" class="toolbar">
+  <span class="toolbar-title">Ground Sampling Management</span>
+  <span class="flex-spacer"></span>
+  <button mat-icon-button (click)="logout()" matTooltip="Logout" class="logout-btn">
     <mat-icon>logout</mat-icon>
   </button>
 </mat-toolbar>
 
-<div class="placeholder">
-  <p>Main page — coming soon</p>
+<div class="page-content">
+  <app-statistics [samples]="displayedSamples()" />
+
+  <app-sample-table
+    [locations]="locations"
+    [samples]="displayedSamples()"
+    [selectedLocationId]="selectedLocationId()"
+    (selectedLocationIdChange)="selectedLocationId.set($event)" />
 </div>
