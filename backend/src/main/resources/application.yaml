@@ -9,3 +9,10 @@ application:
     unit-weight: 25
     water-content: 100
     shear-strength: 800
+  security:
+    jwt:
+      secret: offshore-ground-sampling-jwt-secret-key-change-in-production-min-256-bits
+      expiration-seconds: 3600
+    admin:
+      username: admin
+      password: admin123

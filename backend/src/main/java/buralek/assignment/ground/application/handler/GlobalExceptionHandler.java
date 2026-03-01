@@ -3,6 +3,7 @@ package buralek.assignment.ground.application.handler;
 import buralek.assignment.ground.domain.exception.LocationNotFoundException;
 import buralek.assignment.ground.domain.exception.SampleNotFoundException;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,25 +17,33 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SampleNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleSampleNotFound(SampleNotFoundException ex) {
-        return createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+        return createErrorResponse(HttpStatus.NOT_FOUND, ex, ex.getMessage());
     }
 
     @ExceptionHandler(LocationNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleLocationNotFound(LocationNotFoundException ex) {
-        return createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+        return createErrorResponse(HttpStatus.NOT_FOUND, ex, ex.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ProblemDetail> handleBadCredentials(BadCredentialsException ex) {
+        return createErrorResponse(HttpStatus.UNAUTHORIZED, ex, "Invalid credentials");
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleGeneric(Exception ex) {
-        return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+        return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex,"An unexpected error occurred");
     }
 
     @Override
@@ -66,7 +75,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body(problem);
     }
 
-    private ResponseEntity<ProblemDetail> createErrorResponse(HttpStatus httpStatus, String detail) {
+    private ResponseEntity<ProblemDetail> createErrorResponse(HttpStatus httpStatus, Exception exception, String detail) {
+        log.error("{}", detail, exception);
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(httpStatus, detail);
         return ResponseEntity.status(httpStatus).body(problem);
     }

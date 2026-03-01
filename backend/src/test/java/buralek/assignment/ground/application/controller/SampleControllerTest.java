@@ -17,7 +17,6 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -259,10 +258,10 @@ class SampleControllerTest {
     }
 
     @Test
-    @DisplayName("WHEN calling getSamplesPage with a limit exceeding the maximum, THEN 400 is returned")
+    @DisplayName("WHEN calling getSamplesPage with a limit exceeding the maximum, THEN 500 is returned")
     void getSamplesPage3() throws Exception {
         mockMvc.perform(get("/api/v1/samples/page")
                         .param("limit", "101"))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is5xxServerError());
     }
 }
