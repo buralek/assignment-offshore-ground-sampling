@@ -70,7 +70,7 @@ class LocationControllerTest {
 
     @Test
     @DisplayName("WHEN calling getLocationById endpoint, THEN a location with this id is returned")
-    void getLocationById_returnsLocation() throws Exception {
+    void getLocationById1() throws Exception {
         UUID id = UUID.randomUUID();
 
         LocationResponse response = LocationResponse.builder()
@@ -100,14 +100,14 @@ class LocationControllerTest {
     }
 
     @Test
-    @DisplayName("WHEN calling getLocationById endpoint and a location is not found, THEN 500 error is returned")
-    void getLocationById_whenLocationNotFound_returns5xx() throws Exception {
+    @DisplayName("WHEN calling getLocationById endpoint and a location is not found, THEN 404 is returned")
+    void getLocationById2() throws Exception {
         UUID id = UUID.randomUUID();
 
         when(locationApplicationService.getLocationById(id))
                 .thenThrow(new LocationNotFoundException(id));
 
         mockMvc.perform(get("/api/v1/locations/{id}", id))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isNotFound());
     }
 }
