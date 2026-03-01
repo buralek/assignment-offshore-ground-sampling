@@ -1,8 +1,9 @@
-import { Component, computed, input, model, signal } from '@angular/core';
+import { Component, computed, inject, input, model, signal } from '@angular/core';
 import { UnitToggleComponent } from '../unit-toggle/unit-toggle';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -13,6 +14,7 @@ import { Location } from '../../shared/models/location.model';
 import { Sample } from '../../shared/models/sample.model';
 import { UnitSystem, UNIT_LABELS } from '../../shared/models/unit-system.model';
 import { MOCK_SAMPLE_PAGE } from '../../shared/mock-data';
+import { SampleFormDialogComponent } from '../sample-form-dialog/sample-form-dialog';
 
 const THRESHOLDS = { unitWeight: 25, waterContent: 100, shearStrength: 800 };
 
@@ -29,6 +31,8 @@ const THRESHOLDS = { unitWeight: 25, waterContent: 100, shearStrength: 800 };
   styleUrl: './sample-table.css',
 })
 export class SampleTableComponent {
+  private readonly dialog = inject(MatDialog);
+
   readonly unitSystem    = signal<UnitSystem>('metric');
   readonly locations     = input.required<Location[]>();
   readonly samples       = input.required<Sample[]>();
@@ -74,8 +78,18 @@ export class SampleTableComponent {
     return e.unitWeight.has(sample.id) || e.waterContent.has(sample.id) || e.shearStrength.has(sample.id);
   }
 
-  openAddDialog(): void             { /* TODO */ }
-  openEditDialog(_s: Sample): void  { /* TODO */ }
+  openAddDialog(): void {
+    this.dialog.open(SampleFormDialogComponent, {
+      data: { sample: null, locations: this.locations() },
+    });
+  }
+
+  openEditDialog(s: Sample): void {
+    this.dialog.open(SampleFormDialogComponent, {
+      data: { sample: s, locations: this.locations() },
+    });
+  }
+
   openDeleteDialog(_s: Sample): void { /* TODO */ }
   retry(): void                      { /* TODO */ }
   loadMore(): void                   { /* TODO */ }
