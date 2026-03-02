@@ -20,6 +20,7 @@ public class EntityMapper {
                 .location(toLocationModel(entity.getLocation()))
                 .timestamp(entity.getTimestamp())
                 .zoneId(ZoneId.of(entity.getZoneId()))
+                .depth(entity.getDepth())
                 .unitWeight(entity.getUnitWeight())
                 .waterContent(entity.getWaterContent())
                 .shearStrength(entity.getShearStrength())

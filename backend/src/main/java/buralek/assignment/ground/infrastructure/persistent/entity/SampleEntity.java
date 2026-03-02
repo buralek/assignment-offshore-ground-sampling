@@ -42,6 +42,7 @@ public class SampleEntity {
     private String zoneId;
 
     // All stored in SI units
+    private double depth;          // metres
     private double unitWeight;
     private double waterContent;
     private double shearStrength;
@@ -50,6 +51,7 @@ public class SampleEntity {
             LocationEntity location,
             Instant timestamp,
             ZoneId zoneId,
+            double depth,
             double unitWeight,
             double waterContent,
             double shearStrength
@@ -57,6 +59,7 @@ public class SampleEntity {
         this.location = Objects.requireNonNull(location, "Location is required");
         this.timestamp = Objects.requireNonNull(timestamp, "Timestamp is required");
         this.zoneId = Objects.requireNonNull(zoneId, "ZoneId is required").getId();
+        this.depth = depth;
         this.unitWeight = unitWeight;
         this.waterContent = waterContent;
         this.shearStrength = shearStrength;
@@ -67,11 +70,12 @@ public class SampleEntity {
             LocationEntity location,
             Instant timestamp,
             ZoneId zoneId,
+            double depth,
             double unitWeight,
             double waterContent,
             double shearStrength
     ) {
-        this(location, timestamp, zoneId, unitWeight, waterContent, shearStrength);
+        this(location, timestamp, zoneId, depth, unitWeight, waterContent, shearStrength);
         this.id = id;
     }
 }

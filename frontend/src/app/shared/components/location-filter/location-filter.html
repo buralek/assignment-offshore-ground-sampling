@@ -1,0 +1,11 @@
+<mat-form-field appearance="outline" class="location-filter" subscriptSizing="dynamic">
+  <mat-label>Location</mat-label>
+  <mat-select
+    [value]="filterService.selectedLocationId() ?? ''"
+    (selectionChange)="filterService.selectedLocationId.set($event.value || null)">
+    <mat-option value="">All Locations</mat-option>
+    @for (loc of locations(); track loc.id) {
+      <mat-option [value]="loc.id">{{ loc.name }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>

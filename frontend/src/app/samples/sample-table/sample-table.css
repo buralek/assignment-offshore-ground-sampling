@@ -62,10 +62,6 @@
   flex-wrap: wrap;
 }
 
-.location-filter {
-  width: 200px;
-}
-
 /* ── Table wrapper ───────────────────────────────────────────────── */
 .table-wrapper {
   flex: 1;
@@ -158,7 +154,4 @@
     align-items: stretch;
   }
 
-  .location-filter {
-    width: 100%;
-  }
 }

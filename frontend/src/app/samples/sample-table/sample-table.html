@@ -12,15 +12,7 @@
     </div>
     <div class="header-right">
       <app-unit-toggle />
-      <mat-form-field appearance="outline" class="location-filter" subscriptSizing="dynamic">
-        <mat-label>Location</mat-label>
-        <mat-select [value]="filterService.selectedLocationId()" (selectionChange)="filterService.selectedLocationId.set($event.value)">
-          <mat-option [value]="null">All Locations</mat-option>
-          @for (loc of locations(); track loc.id) {
-            <mat-option [value]="loc.id">{{ loc.name }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+      <app-location-filter />
     </div>
   </div>
 
@@ -57,13 +49,14 @@
           id wider (shows more UUID), measurement cols narrower (header wraps).
         -->
         <colgroup>
-          <col style="width:16%"><!-- id -->
-          <col style="width:20%"><!-- location -->
-          <col style="width:12%"><!-- date -->
-          <col style="width:13%"><!-- unitWeight -->
-          <col style="width:12%"><!-- waterContent -->
-          <col style="width:14%"><!-- shearStrength -->
-          <col style="width:13%"><!-- actions -->
+          <col style="width:14%"><!-- id -->
+          <col style="width:18%"><!-- location -->
+          <col style="width:10%"><!-- date -->
+          <col style="width:8%"> <!-- depth -->
+          <col style="width:12%"><!-- unitWeight -->
+          <col style="width:11%"><!-- waterContent -->
+          <col style="width:13%"><!-- shearStrength -->
+          <col style="width:14%"><!-- actions -->
         </colgroup>
 
         <!-- ID -->
@@ -82,6 +75,12 @@
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef style="white-space:normal">Date Collected</th>
           <td mat-cell *matCellDef="let s" style="white-space:normal">{{ s.timestampWithTimeZone | date:'dd MMM yyyy' }}</td>
+        </ng-container>
+
+        <!-- Depth -->
+        <ng-container matColumnDef="depth">
+          <th mat-header-cell *matHeaderCellDef style="white-space:normal">{{ columnLabels().depth }}</th>
+          <td mat-cell *matCellDef="let s">{{ s.depth | number:'1.1-1' }}</td>
         </ng-container>
 
         <!-- Unit Weight -->

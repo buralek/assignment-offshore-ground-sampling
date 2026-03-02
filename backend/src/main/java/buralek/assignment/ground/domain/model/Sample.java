@@ -16,9 +16,8 @@ public class Sample {
     ZoneId zoneId;
 
     // All stored in SI units
+    double depth;
     double unitWeight;
     double waterContent;
     double shearStrength;
-
-    // validation?
 }

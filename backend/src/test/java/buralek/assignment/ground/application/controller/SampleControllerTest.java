@@ -48,6 +48,7 @@ class SampleControllerTest {
                 .id(SAMPLE_ID)
                 .locationId(LOCATION_ID)
                 .timestampWithTimeZone(OffsetDateTime.parse(SAMPLING_DATE))
+                .depth(10.0)
                 .unitWeight(18.7)
                 .waterContent(22.4)
                 .shearStrength(35.8)
@@ -61,7 +62,8 @@ class SampleControllerTest {
                   "samplingTimestamp": "%s",
                   "unitWeight": 18.7,
                   "waterContent": 22.4,
-                  "shearStrength": 35.8
+                  "shearStrength": 35.8,
+                  "depth": 10.0
                 }
                 """.formatted(LOCATION_ID, SAMPLING_INSTANT);
     }
@@ -74,7 +76,8 @@ class SampleControllerTest {
                   "timestampWithTimeZone": "%s",
                   "unitWeight": 18.7,
                   "waterContent": 22.4,
-                  "shearStrength": 35.8
+                  "shearStrength": 35.8,
+                  "depth": 10.0
                 }
                 """.formatted(SAMPLE_ID, LOCATION_ID, SAMPLING_DATE);
     }
@@ -203,7 +206,7 @@ class SampleControllerTest {
                 .nextCursor(null)
                 .build();
 
-        when(sampleApplicationService.getSamplesPage(null, null, null, 20)).thenReturn(pageResponse);
+        when(sampleApplicationService.getSamplesPage(null, null, null, 10)).thenReturn(pageResponse);
 
         String expectedJson = """
                 {
@@ -214,7 +217,8 @@ class SampleControllerTest {
                       "timestampWithTimeZone": "%s",
                       "unitWeight": 18.7,
                       "waterContent": 22.4,
-                      "shearStrength": 35.8
+                      "shearStrength": 35.8,
+                      "depth": 10.0
                     }
                   ],
                   "hasMore": false
@@ -240,7 +244,7 @@ class SampleControllerTest {
                 .nextCursor(nextCursor)
                 .build();
 
-        when(sampleApplicationService.getSamplesPage(null, afterTimestamp, SAMPLE_ID, 20)).thenReturn(pageResponse);
+        when(sampleApplicationService.getSamplesPage(null, afterTimestamp, SAMPLE_ID, 10)).thenReturn(pageResponse);
 
         mockMvc.perform(get("/api/v1/samples/page")
                         .param("afterTimestamp", SAMPLING_INSTANT)

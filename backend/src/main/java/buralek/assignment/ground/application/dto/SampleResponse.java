@@ -20,6 +20,9 @@ public class SampleResponse {
             example = "2026-07-01T10:15:30+02:00")
     OffsetDateTime timestampWithTimeZone;
 
+    @Schema(example = "5.5")
+    Double depth;
+
     @Schema(example = "18.7")
     Double unitWeight;
 

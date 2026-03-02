@@ -1,3 +1,25 @@
+/* ── Sidenav container ───────────────────────────────────────────── */
+.sidenav-container {
+  height: 100vh;
+}
+
+.app-sidenav {
+  width: 160px;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.app-sidenav mat-nav-list {
+  padding-top: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sidenav-content {
+  display: flex;
+  flex-direction: column;
+}
+
 /* ── Toolbar ─────────────────────────────────────────────────────── */
 .toolbar {
   position: sticky;
@@ -22,13 +44,11 @@
 
 /* ── Page layout ─────────────────────────────────────────────────── */
 .page-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  box-sizing: border-box;
   height: calc(100vh - 64px);
   overflow: hidden;
+  padding: 1.5rem;
+  gap: 1.25rem;
+  box-sizing: border-box;
 }

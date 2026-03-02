@@ -1,13 +1,41 @@
-<mat-toolbar color="primary" class="toolbar">
-  <span class="toolbar-title">Ground Sampling Management</span>
-  <span class="flex-spacer"></span>
-  <button mat-icon-button (click)="logout()" matTooltip="Logout" class="logout-btn">
-    <mat-icon>logout</mat-icon>
-  </button>
-</mat-toolbar>
+<mat-sidenav-container class="sidenav-container" fullscreen>
 
-<div class="page-content">
-  <app-statistics />
+  <mat-sidenav mode="side" opened class="app-sidenav">
+    <mat-nav-list>
+      <mat-list-item
+        (click)="activeView.set('samples')"
+        [activated]="activeView() === 'samples'">
+        <mat-icon matListItemIcon>table_chart</mat-icon>
+        <span matListItemTitle>Samples</span>
+      </mat-list-item>
+      <mat-list-item
+        (click)="activeView.set('graph')"
+        [activated]="activeView() === 'graph'">
+        <mat-icon matListItemIcon>show_chart</mat-icon>
+        <span matListItemTitle>Graph</span>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
 
-  <app-sample-table />
-</div>
+  <mat-sidenav-content class="sidenav-content">
+
+    <mat-toolbar color="primary" class="toolbar">
+      <span class="toolbar-title">Ground Sampling Management</span>
+      <span class="flex-spacer"></span>
+      <button mat-icon-button (click)="logout()" matTooltip="Logout" class="logout-btn">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <div class="page-content">
+      @if (activeView() === 'samples') {
+        <app-statistics />
+        <app-sample-table />
+      } @else {
+        <app-graph />
+      }
+    </div>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

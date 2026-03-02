@@ -1,6 +1,6 @@
 # Offshore Ground Sampling
 
-A full-stack web application for managing offshore soil sampling measurements. Supports CRUD operations, location-based filtering, cursor-based pagination, threshold violation highlighting, and a real-time statistics dashboard.
+A full-stack web application for managing offshore soil sampling measurements. Supports CRUD operations, location-based filtering, cursor-based pagination, threshold violation highlighting, a real-time statistics dashboard, and a depth-vs-parameter graph visualisation.
 
 ---
 
@@ -29,6 +29,7 @@ A full-stack web application for managing offshore soil sampling measurements. S
 | Angular Material | 21 | UI component library |
 | TypeScript | 5.9 | Language |
 | RxJS | 7.8 | Reactive HTTP and async |
+| ng2-charts + Chart.js | latest | Line chart visualisation |
 | Vitest | 4 | Unit testing |
 | Prettier | 3 | Code formatting |
 
@@ -60,10 +61,14 @@ A full-stack web application for managing offshore soil sampling measurements. S
 ├── frontend/         # Angular application
 │   ├── src/app/
 │   │   ├── auth/            # Login page, JWT interceptor, auth guard
-│   │   ├── home/            # Root layout (toolbar + logout)
-│   │   ├── samples/         # Sample table, form dialog, delete dialog
+│   │   ├── home/            # Root layout: sidenav with Samples / Graph views
+│   │   ├── samples/         # Sample table, form dialog, delete dialog, unit toggle
 │   │   ├── statistics/      # Statistics cards
-│   │   └── shared/          # Models, services (Filter, Location, Sample, Statistics)
+│   │   ├── graph/           # Depth-vs-parameter line charts (3 panels)
+│   │   └── shared/
+│   │       ├── models/      # Sample, Location, UnitSystem types and constants
+│   │       ├── services/    # Filter, Location, Sample, Statistics, UnitSystem, UnitConversion
+│   │       └── components/  # Shared UI: LocationFilterComponent, UnitToggleComponent
 │   ├── nginx.conf
 │   └── Dockerfile
 └── docker-compose.yml
@@ -150,9 +155,11 @@ cd frontend && npm test
 ## Key Features
 
 - **JWT authentication** — stateless login; token stored in `sessionStorage`
-- **Sample management** — create, edit, and delete ground samples with location, timestamp, unit weight, water content, and shear strength
-- **Location filter** — filter the table and statistics by platform location
+- **Sample management** — create, edit, and delete ground samples with location, timestamp, depth, unit weight, water content, and shear strength
+- **Sidenav navigation** — left sidebar switches between the **Samples** view and the **Graph** view without page reload
+- **Location filter** — shared filter component that simultaneously filters the sample table, statistics, and graphs by platform location
 - **Cursor-based pagination** — loads 10 samples at a time; "Load more" appends the next page
 - **Threshold highlighting** — rows and cells exceeding configured limits are visually flagged with warning icons
-- **Unit system toggle** — switch between metric (kN/m³, %, kPa) and US customary units
+- **Unit system toggle** — switch between Metric (kN/m³, %, kPa) and US customary (pcf, %, psf) units; affects the table, statistics, and graphs simultaneously
 - **Statistics dashboard** — server-computed average water content and per-metric exceeded-threshold counts; updates automatically on filter change and after any data mutation
+- **Graph visualisation** — three line charts (Unit Weight, Water Content, Shear Strength) plotted against depth using a linear X-axis; fetches all pages automatically and reacts to location filter and unit system changes

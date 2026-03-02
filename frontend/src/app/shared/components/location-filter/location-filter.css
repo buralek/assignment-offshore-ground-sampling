@@ -1,0 +1,13 @@
+:host {
+  display: contents;
+}
+
+.location-filter {
+  width: 200px;
+}
+
+@media (max-width: 600px) {
+  .location-filter {
+    width: 100%;
+  }
+}

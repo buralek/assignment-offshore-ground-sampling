@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { UnitSystemService } from '../../shared/services/unit-system.service';
+import { UnitSystemService } from '../../services/unit-system.service';
 
 @Component({
   selector: 'app-unit-toggle',

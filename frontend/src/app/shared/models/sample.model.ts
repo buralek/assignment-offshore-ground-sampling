@@ -3,6 +3,7 @@ export interface Sample {
   id: string;
   locationId: string;
   timestampWithTimeZone: string; // OffsetDateTime — ISO-8601 string e.g. "2026-07-01T10:15:30+02:00"
+  depth: number;                 // m
   unitWeight: number;            // kN/m³
   waterContent: number;          // %
   shearStrength: number;         // kPa
@@ -12,6 +13,7 @@ export interface Sample {
 export interface SampleRequest {
   locationId: string;
   samplingTimestamp: string;     // Instant — UTC ISO-8601 string e.g. "2026-07-01T08:15:30Z"
+  depth: number;
   unitWeight: number;
   waterContent: number;
   shearStrength: number;

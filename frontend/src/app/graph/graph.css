@@ -1,0 +1,32 @@
+:host {
+  display: block;
+  padding: 1.5rem;
+  overflow-y: auto;
+  height: calc(100vh - 64px);
+  box-sizing: border-box;
+}
+
+.graph-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.graphs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 300px;
+}
+
+@media (max-width: 900px) {
+  .graphs-grid {
+    grid-template-columns: 1fr;
+  }
+}
