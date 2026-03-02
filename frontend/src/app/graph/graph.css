@@ -6,16 +6,25 @@
   box-sizing: border-box;
 }
 
-.graph-card {
-  max-width: 900px;
-  margin: 0 auto;
+.graph-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.25rem;
 }
 
-.param-toggle {
-  margin-bottom: 1.25rem;
+.graphs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
 }
 
 .chart-wrapper {
   position: relative;
-  height: 460px;
+  height: 300px;
+}
+
+@media (max-width: 900px) {
+  .graphs-grid {
+    grid-template-columns: 1fr;
+  }
 }

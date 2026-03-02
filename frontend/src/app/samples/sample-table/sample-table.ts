@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { UnitToggleComponent } from '../unit-toggle/unit-toggle';
+import { UnitToggleComponent } from '../../shared/components/unit-toggle/unit-toggle';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';

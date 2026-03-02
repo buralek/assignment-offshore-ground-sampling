@@ -8,6 +8,13 @@
   border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 
+.app-sidenav mat-nav-list {
+  padding-top: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .sidenav-content {
   display: flex;
   flex-direction: column;
