@@ -57,6 +57,7 @@ class SampleApplicationServiceImplTest {
                         .build())
                 .timestamp(SAMPLING_INSTANT)
                 .zoneId(ZoneId.of("Europe/Amsterdam"))
+                .depth(5.0)
                 .unitWeight(18.7)
                 .waterContent(22.4)
                 .shearStrength(35.8)
@@ -68,6 +69,7 @@ class SampleApplicationServiceImplTest {
                 .id(SAMPLE_ID)
                 .locationId(LOCATION_ID)
                 .timestampWithTimeZone(SAMPLING_DATE)
+                .depth(5.0)
                 .unitWeight(18.7)
                 .waterContent(22.4)
                 .shearStrength(35.8)
@@ -78,6 +80,7 @@ class SampleApplicationServiceImplTest {
         return SampleRequest.builder()
                 .locationId(LOCATION_ID)
                 .samplingTimestamp(SAMPLING_INSTANT)
+                .depth(5.0)
                 .unitWeight(18.7)
                 .waterContent(22.4)
                 .shearStrength(35.8)
@@ -116,13 +119,13 @@ class SampleApplicationServiceImplTest {
         Sample sample = buildSample();
         SampleResponse response = buildSampleResponse();
 
-        when(sampleDomainService.create(LOCATION_ID, SAMPLING_INSTANT, 18.7, 22.4, 35.8)).thenReturn(sample);
+        when(sampleDomainService.create(LOCATION_ID, SAMPLING_INSTANT, 5.0, 18.7, 22.4, 35.8)).thenReturn(sample);
         when(sampleMapper.toSampleResponse(sample)).thenReturn(response);
 
         SampleResponse result = sampleApplicationService.createSample(request);
 
         assertThat(result).isEqualTo(response);
-        verify(sampleDomainService).create(LOCATION_ID, SAMPLING_INSTANT, 18.7, 22.4, 35.8);
+        verify(sampleDomainService).create(LOCATION_ID, SAMPLING_INSTANT, 5.0, 18.7, 22.4, 35.8);
     }
 
     @Test
@@ -132,13 +135,13 @@ class SampleApplicationServiceImplTest {
         Sample sample = buildSample();
         SampleResponse response = buildSampleResponse();
 
-        when(sampleDomainService.update(SAMPLE_ID, LOCATION_ID, SAMPLING_INSTANT, 18.7, 22.4, 35.8)).thenReturn(sample);
+        when(sampleDomainService.update(SAMPLE_ID, LOCATION_ID, SAMPLING_INSTANT, 5.0, 18.7, 22.4, 35.8)).thenReturn(sample);
         when(sampleMapper.toSampleResponse(sample)).thenReturn(response);
 
         SampleResponse result = sampleApplicationService.updateSample(SAMPLE_ID, request);
 
         assertThat(result).isEqualTo(response);
-        verify(sampleDomainService).update(SAMPLE_ID, LOCATION_ID, SAMPLING_INSTANT, 18.7, 22.4, 35.8);
+        verify(sampleDomainService).update(SAMPLE_ID, LOCATION_ID, SAMPLING_INSTANT, 5.0, 18.7, 22.4, 35.8);
     }
 
     @Test

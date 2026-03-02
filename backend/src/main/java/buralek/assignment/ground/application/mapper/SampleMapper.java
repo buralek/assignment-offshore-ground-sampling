@@ -12,6 +12,7 @@ public class SampleMapper {
                 .id(sample.getId())
                 .locationId(sample.getLocation().getId())
                 .timestampWithTimeZone(sample.getTimestamp().atZone(sample.getZoneId()).toOffsetDateTime())
+                .depth(sample.getDepth())
                 .unitWeight(sample.getUnitWeight())
                 .waterContent(sample.getWaterContent())
                 .shearStrength(sample.getShearStrength())

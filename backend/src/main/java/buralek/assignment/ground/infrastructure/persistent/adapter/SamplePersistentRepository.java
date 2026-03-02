@@ -32,9 +32,9 @@ public class SamplePersistentRepository implements SampleRepository {
 
         SampleEntity sampleEntity = sample.getId() != null
                 ? new SampleEntity(sample.getId(), locationEntity, sample.getTimestamp(), sample.getZoneId(),
-                        sample.getUnitWeight(), sample.getWaterContent(), sample.getShearStrength())
+                        sample.getDepth(), sample.getUnitWeight(), sample.getWaterContent(), sample.getShearStrength())
                 : new SampleEntity(locationEntity, sample.getTimestamp(), sample.getZoneId(),
-                        sample.getUnitWeight(), sample.getWaterContent(), sample.getShearStrength());
+                        sample.getDepth(), sample.getUnitWeight(), sample.getWaterContent(), sample.getShearStrength());
 
         return entityMapper.toSampleModel(sampleJpaRepository.save(sampleEntity));
     }

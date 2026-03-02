@@ -61,6 +61,7 @@ class SampleDomainServiceTest {
                 .location(buildLocation())
                 .timestamp(DATE)
                 .zoneId(ZONE_ID)
+                .depth(5.0)
                 .unitWeight(18.7)
                 .waterContent(22.4)
                 .shearStrength(35.8)
@@ -124,7 +125,7 @@ class SampleDomainServiceTest {
         when(locationRepository.findById(LOCATION_ID)).thenReturn(Optional.of(location));
         when(sampleRepository.save(any())).thenReturn(savedSample);
 
-        sampleDomainService.create(LOCATION_ID, DATE, 18.7, 22.4, 35.8);
+        sampleDomainService.create(LOCATION_ID, DATE, 5.0, 18.7, 22.4, 35.8);
 
         ArgumentCaptor<Sample> captor = ArgumentCaptor.forClass(Sample.class);
         verify(sampleRepository).save(captor.capture());
@@ -134,6 +135,7 @@ class SampleDomainServiceTest {
         assertThat(captured.getLocation()).isEqualTo(location);
         assertThat(captured.getTimestamp()).isEqualTo(DATE);
         assertThat(captured.getZoneId()).isEqualTo(ZONE_ID);
+        assertThat(captured.getDepth()).isEqualTo(5.0);
         assertThat(captured.getUnitWeight()).isEqualTo(18.7);
         assertThat(captured.getWaterContent()).isEqualTo(22.4);
         assertThat(captured.getShearStrength()).isEqualTo(35.8);
@@ -144,7 +146,7 @@ class SampleDomainServiceTest {
     void create2() {
         when(locationRepository.findById(LOCATION_ID)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> sampleDomainService.create(LOCATION_ID, DATE, 18.7, 22.4, 35.8))
+        assertThatThrownBy(() -> sampleDomainService.create(LOCATION_ID, DATE, 5.0, 18.7, 22.4, 35.8))
                 .isInstanceOf(LocationNotFoundException.class)
                 .hasMessageContaining(LOCATION_ID.toString());
 
@@ -164,7 +166,7 @@ class SampleDomainServiceTest {
         when(locationRepository.findById(LOCATION_ID)).thenReturn(Optional.of(location));
         when(sampleRepository.save(any())).thenReturn(savedSample);
 
-        sampleDomainService.update(SAMPLE_ID, LOCATION_ID, DATE, 18.7, 22.4, 35.8);
+        sampleDomainService.update(SAMPLE_ID, LOCATION_ID, DATE, 5.0, 18.7, 22.4, 35.8);
 
         ArgumentCaptor<Sample> captor = ArgumentCaptor.forClass(Sample.class);
         verify(sampleRepository).save(captor.capture());
@@ -174,6 +176,7 @@ class SampleDomainServiceTest {
         assertThat(captured.getLocation()).isEqualTo(location);
         assertThat(captured.getTimestamp()).isEqualTo(DATE);
         assertThat(captured.getZoneId()).isEqualTo(ZONE_ID);
+        assertThat(captured.getDepth()).isEqualTo(5.0);
         assertThat(captured.getUnitWeight()).isEqualTo(18.7);
         assertThat(captured.getWaterContent()).isEqualTo(22.4);
         assertThat(captured.getShearStrength()).isEqualTo(35.8);
@@ -184,7 +187,7 @@ class SampleDomainServiceTest {
     void update2() {
         when(sampleRepository.findById(SAMPLE_ID)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> sampleDomainService.update(SAMPLE_ID, LOCATION_ID, DATE, 18.7, 22.4, 35.8))
+        assertThatThrownBy(() -> sampleDomainService.update(SAMPLE_ID, LOCATION_ID, DATE, 5.0, 18.7, 22.4, 35.8))
                 .isInstanceOf(SampleNotFoundException.class)
                 .hasMessageContaining(SAMPLE_ID.toString());
 
@@ -197,7 +200,7 @@ class SampleDomainServiceTest {
         when(sampleRepository.findById(SAMPLE_ID)).thenReturn(Optional.of(buildSample()));
         when(locationRepository.findById(LOCATION_ID)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> sampleDomainService.update(SAMPLE_ID, LOCATION_ID, DATE, 18.7, 22.4, 35.8))
+        assertThatThrownBy(() -> sampleDomainService.update(SAMPLE_ID, LOCATION_ID, DATE, 5.0, 18.7, 22.4, 35.8))
                 .isInstanceOf(LocationNotFoundException.class)
                 .hasMessageContaining(LOCATION_ID.toString());
 

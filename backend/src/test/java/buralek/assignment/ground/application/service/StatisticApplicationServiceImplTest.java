@@ -112,6 +112,11 @@ class StatisticApplicationServiceImplTest {
                         .waterContent(List.of())
                         .shearStrength(List.of())
                         .build())
+                .thresholds(buralek.assignment.ground.application.dto.SampleThresholdDto.builder()
+                        .unitWeight(25.0)
+                        .waterContent(100.0)
+                        .shearStrength(800.0)
+                        .build())
                 .build());
     }
 }

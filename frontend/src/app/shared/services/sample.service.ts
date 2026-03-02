@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Sample, SampleCursor, SamplePage, SampleRequest } from '../models/sample.model';
 
@@ -33,5 +34,16 @@ export class SampleService {
 
   remove(id: string): Observable<void> {
     return this.http.delete<void>(`${this.base}/${id}`);
+  }
+
+  getAll(locationId: string | null): Observable<Sample[]> {
+    const fetchPage = (cursor: SampleCursor | null, acc: Sample[]): Observable<Sample[]> =>
+      this.getPage({ locationId, cursor, limit: 100 }).pipe(
+        switchMap(page => {
+          const combined = [...acc, ...page.data];
+          return page.hasMore ? fetchPage(page.nextCursor, combined) : of(combined);
+        })
+      );
+    return fetchPage(null, []);
   }
 }

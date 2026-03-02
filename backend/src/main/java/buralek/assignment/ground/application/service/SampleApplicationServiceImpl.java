@@ -34,6 +34,7 @@ public class SampleApplicationServiceImpl implements SampleApplicationService {
         Sample sample = sampleDomainService.create(
                 request.getLocationId(),
                 request.getSamplingTimestamp(),
+                request.getDepth(),
                 request.getUnitWeight(),
                 request.getWaterContent(),
                 request.getShearStrength()
@@ -47,6 +48,7 @@ public class SampleApplicationServiceImpl implements SampleApplicationService {
                 id,
                 request.getLocationId(),
                 request.getSamplingTimestamp(),
+                request.getDepth(),
                 request.getUnitWeight(),
                 request.getWaterContent(),
                 request.getShearStrength()

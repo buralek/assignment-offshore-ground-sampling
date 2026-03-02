@@ -88,7 +88,7 @@ export class SampleTableComponent {
     this.loadPage(this.filterService.selectedLocationId(), null);
   }
 
-  readonly displayColumns = ['id', 'location', 'date', 'unitWeight', 'waterContent', 'shearStrength', 'actions'];
+  readonly displayColumns = ['id', 'location', 'date', 'depth', 'unitWeight', 'waterContent', 'shearStrength', 'actions'];
 
   readonly columnLabels = computed(() => UNIT_LABELS[this.unitSystemService.selected()]);
 

@@ -50,6 +50,8 @@ export class SampleFormDialogComponent {
                    [Validators.required, notInFuture]],
     time:          [this.data.sample ? toTimeString(this.data.sample.timestampWithTimeZone) : '',
                    Validators.required],
+    depth:         [this.data.sample?.depth         ?? null as number | null,
+                   [Validators.required, Validators.min(0)]],
     unitWeight:    [this.data.sample?.unitWeight    ?? null as number | null,
                    [Validators.required, Validators.min(0)]],
     waterContent:  [this.data.sample?.waterContent  ?? null as number | null,
@@ -64,7 +66,7 @@ export class SampleFormDialogComponent {
 
   save(): void {
     if (this.form.invalid) return;
-    const { locationId, date, time, unitWeight, waterContent, shearStrength } = this.form.getRawValue();
+    const { locationId, date, time, depth, unitWeight, waterContent, shearStrength } = this.form.getRawValue();
     const combined = new Date(date as Date);
     const [timePart, msPart] = (time as string).split('.');
     const [h, m, s = 0] = timePart.split(':').map(Number);
@@ -72,6 +74,7 @@ export class SampleFormDialogComponent {
     const result: SampleRequest = {
       locationId:         locationId!,
       samplingTimestamp:  combined.toISOString(),
+      depth:              +depth!,
       unitWeight:         +unitWeight!,
       waterContent:       +waterContent!,
       shearStrength:      +shearStrength!,

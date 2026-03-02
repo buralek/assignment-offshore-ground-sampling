@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  padding: 1.5rem;
+  overflow-y: auto;
+  height: calc(100vh - 64px);
+  box-sizing: border-box;
+}
+
+.graph-card {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.param-toggle {
+  margin-bottom: 1.25rem;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 460px;
+}

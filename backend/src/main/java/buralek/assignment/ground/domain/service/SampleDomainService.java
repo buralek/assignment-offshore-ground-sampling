@@ -36,13 +36,14 @@ public class SampleDomainService {
         return sample;
     }
 
-    public Sample create(UUID locationId, Instant timestamp, double unitWeight, double waterContent, double shearStrength) {
+    public Sample create(UUID locationId, Instant timestamp, double depth, double unitWeight, double waterContent, double shearStrength) {
         Location location = locationRepository.findById(locationId)
                 .orElseThrow(() -> new LocationNotFoundException(locationId));
         Sample saved = sampleRepository.save(Sample.builder()
                 .location(location)
                 .timestamp(timestamp)
                 .zoneId(location.getZoneId())
+                .depth(depth)
                 .unitWeight(unitWeight)
                 .waterContent(waterContent)
                 .shearStrength(shearStrength)
@@ -51,7 +52,7 @@ public class SampleDomainService {
         return saved;
     }
 
-    public Sample update(UUID id, UUID locationId, Instant timestamp, double unitWeight, double waterContent, double shearStrength) {
+    public Sample update(UUID id, UUID locationId, Instant timestamp, double depth, double unitWeight, double waterContent, double shearStrength) {
         Sample existing = findById(id);
         Location location = locationRepository.findById(locationId)
                 .orElseThrow(() -> {
@@ -63,6 +64,7 @@ public class SampleDomainService {
                 .location(location)
                 .timestamp(timestamp)
                 .zoneId(location.getZoneId())
+                .depth(depth)
                 .unitWeight(unitWeight)
                 .waterContent(waterContent)
                 .shearStrength(shearStrength)

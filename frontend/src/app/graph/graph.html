@@ -1,0 +1,23 @@
+<mat-card class="graph-card">
+  <mat-card-header>
+    <mat-card-title>Depth vs Parameter</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-button-toggle-group
+      [value]="activeParam()"
+      (change)="activeParam.set($event.value)"
+      class="param-toggle"
+      aria-label="Parameter">
+      <mat-button-toggle value="unitWeight">Unit Weight</mat-button-toggle>
+      <mat-button-toggle value="waterContent">Water Content</mat-button-toggle>
+      <mat-button-toggle value="shearStrength">Shear Strength</mat-button-toggle>
+    </mat-button-toggle-group>
+    <div class="chart-wrapper">
+      <canvas baseChart
+        type="line"
+        [data]="chartData()"
+        [options]="chartOptions">
+      </canvas>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -28,6 +28,12 @@ public class SampleRequest {
 
     @NotNull
     @Positive
+    @Schema(description = "Sampling depth in metres",
+            example = "5.5")
+    Double depth;
+
+    @NotNull
+    @Positive
     @Schema(description = "Unit weight in kN/m³",
             example = "18.7")
     Double unitWeight;
@@ -48,12 +54,14 @@ public class SampleRequest {
     public SampleRequest(
             @JsonProperty("locationId") UUID locationId,
             @JsonProperty("samplingTimestamp") Instant samplingTimestamp,
+            @JsonProperty("depth") Double depth,
             @JsonProperty("unitWeight") Double unitWeight,
             @JsonProperty("waterContent") Double waterContent,
             @JsonProperty("shearStrength") Double shearStrength
     ) {
         this.locationId = locationId;
         this.samplingTimestamp = samplingTimestamp;
+        this.depth = depth;
         this.unitWeight = unitWeight;
         this.waterContent = waterContent;
         this.shearStrength = shearStrength;

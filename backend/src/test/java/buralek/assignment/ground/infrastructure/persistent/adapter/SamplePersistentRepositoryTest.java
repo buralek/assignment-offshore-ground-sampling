@@ -46,7 +46,7 @@ class SamplePersistentRepositoryTest {
     private SampleEntity persistSample() {
         entityManager.clear();
         LocationEntity managed = entityManager.find(LocationEntity.class, locationEntity.getId());
-        SampleEntity sample = new SampleEntity(managed, DATE, ZONE_ID, 18.7, 22.4, 35.8);
+        SampleEntity sample = new SampleEntity(managed, DATE, ZONE_ID, 5.0, 18.7, 22.4, 35.8);
         return entityManager.persistAndFlush(sample);
     }
 
@@ -67,6 +67,7 @@ class SamplePersistentRepositoryTest {
                 .location(location)
                 .timestamp(DATE)
                 .zoneId(ZONE_ID)
+                .depth(5.0)
                 .unitWeight(unitWeight)
                 .waterContent(waterContent)
                 .shearStrength(shearStrength)
@@ -85,6 +86,7 @@ class SamplePersistentRepositoryTest {
                         .build())
                 .timestamp(entity.getTimestamp())
                 .zoneId(ZoneId.of(entity.getZoneId()))
+                .depth(entity.getDepth())
                 .unitWeight(entity.getUnitWeight())
                 .waterContent(entity.getWaterContent())
                 .shearStrength(entity.getShearStrength())
@@ -185,7 +187,7 @@ class SamplePersistentRepositoryTest {
     private SampleEntity persistSampleAt(Instant timestamp) {
         entityManager.clear();
         LocationEntity managed = entityManager.find(LocationEntity.class, locationEntity.getId());
-        return entityManager.persistAndFlush(new SampleEntity(managed, timestamp, ZONE_ID, 10.0, 20.0, 30.0));
+        return entityManager.persistAndFlush(new SampleEntity(managed, timestamp, ZONE_ID, 5.0, 10.0, 20.0, 30.0));
     }
 
     @Test
@@ -239,7 +241,7 @@ class SamplePersistentRepositoryTest {
 
         entityManager.clear();
         LocationEntity managedOther = entityManager.find(LocationEntity.class, otherLocation.getId());
-        entityManager.persistAndFlush(new SampleEntity(managedOther, Instant.ofEpochSecond(2_000_000), ZONE_ID, 10.0, 20.0, 30.0));
+        entityManager.persistAndFlush(new SampleEntity(managedOther, Instant.ofEpochSecond(2_000_000), ZONE_ID, 5.0, 10.0, 20.0, 30.0));
 
         List<Sample> result = samplePersistentRepository.findPage(locationEntity.getId(), null, null, 10);
 
