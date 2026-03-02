@@ -52,6 +52,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @NonNull HttpHeaders headers,
             @NonNull HttpStatusCode status,
             @NonNull WebRequest request) {
+        log.error("Validation failed: {}", ex.getMessage(), ex);
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
         List<Map<String, String>> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(fe -> Map.of("field", fe.getField(), "message", fe.getDefaultMessage()))
@@ -66,6 +67,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @NonNull HttpHeaders headers,
             @NonNull HttpStatusCode status,
             @NonNull WebRequest request) {
+        log.error("Method validation failed: {}", ex.getMessage(), ex);
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
         List<String> errors = ex.getParameterValidationResults().stream()
                 .flatMap(r -> r.getResolvableErrors().stream())

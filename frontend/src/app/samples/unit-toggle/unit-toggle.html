@@ -1,6 +1,6 @@
 <mat-button-toggle-group
-  [value]="value()"
-  (change)="value.set($event.value)"
+  [value]="unitSystemService.selected()"
+  (change)="unitSystemService.selected.set($event.value)"
   aria-label="Unit system">
   <mat-button-toggle value="metric">Metric</mat-button-toggle>
   <mat-button-toggle value="us">US</mat-button-toggle>

@@ -4,3 +4,15 @@ export const UNIT_LABELS: Record<UnitSystem, { depth: string; unitWeight: string
   metric: { depth: 'Depth (m)',  unitWeight: 'Unit Weight (kN/m³)', waterContent: 'Water Content (%)', shearStrength: 'Shear Strength (kPa)' },
   us:     { depth: 'Depth (ft)', unitWeight: 'Unit Weight (pcf)',    waterContent: 'Water Content (%)', shearStrength: 'Shear Strength (psf)' }
 };
+
+// Multipliers to apply when converting FROM metric TO the given system
+export const UNIT_CONVERSIONS: Record<UnitSystem, { unitWeight: number; shearStrength: number }> = {
+  metric: { unitWeight: 1,       shearStrength: 1 },
+  us:     { unitWeight: 6.36587, shearStrength: 20.8854 },
+};
+
+// Short unit symbols for display (e.g. threshold labels)
+export const UNIT_SYMBOLS: Record<UnitSystem, { unitWeight: string; waterContent: string; shearStrength: string }> = {
+  metric: { unitWeight: 'kN/m³', waterContent: '%', shearStrength: 'kPa' },
+  us:     { unitWeight: 'pcf',   waterContent: '%', shearStrength: 'psf' },
+};

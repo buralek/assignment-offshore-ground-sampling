@@ -19,4 +19,7 @@ public class SampleStatisticResponse {
 
     @Schema
     SampleSurpassingThresholdDto samplesSurpassingThreshold;
+
+    @Schema
+    SampleThresholdDto thresholds;
 }

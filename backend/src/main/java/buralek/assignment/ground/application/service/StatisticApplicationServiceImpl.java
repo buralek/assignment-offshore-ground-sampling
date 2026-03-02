@@ -4,6 +4,7 @@ import buralek.assignment.ground.application.config.SampleThresholdProperties;
 import buralek.assignment.ground.application.dto.SampleStatisticFilterDto;
 import buralek.assignment.ground.application.dto.SampleStatisticResponse;
 import buralek.assignment.ground.application.dto.SampleSurpassingThresholdDto;
+import buralek.assignment.ground.application.dto.SampleThresholdDto;
 import buralek.assignment.ground.domain.model.SampleStatistics;
 import buralek.assignment.ground.domain.model.Threshold;
 import buralek.assignment.ground.domain.service.StatisticDomainService;
@@ -37,6 +38,11 @@ public class StatisticApplicationServiceImpl implements StatisticApplicationServ
                         .unitWeight(statistics.getUnitWeightExceeding())
                         .waterContent(statistics.getWaterContentExceeding())
                         .shearStrength(statistics.getShearStrengthExceeding())
+                        .build())
+                .thresholds(SampleThresholdDto.builder()
+                        .unitWeight(thresholdProperties.getUnitWeight())
+                        .waterContent(thresholdProperties.getWaterContent())
+                        .shearStrength(thresholdProperties.getShearStrength())
                         .build())
                 .build();
     }

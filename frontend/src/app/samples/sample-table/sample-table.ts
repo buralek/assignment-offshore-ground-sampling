@@ -12,10 +12,12 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Location } from '../../shared/models/location.model';
 import { Sample, SampleCursor, SampleRequest } from '../../shared/models/sample.model';
-import { UnitSystem, UNIT_LABELS } from '../../shared/models/unit-system.model';
+import { UNIT_LABELS } from '../../shared/models/unit-system.model';
 import { FilterService } from '../../shared/services/filter.service';
 import { LocationService } from '../../shared/services/location.service';
 import { SampleService } from '../../shared/services/sample.service';
+import { UnitConversionService } from '../../shared/services/unit-conversion.service';
+import { UnitSystemService } from '../../shared/services/unit-system.service';
 import { SampleFormDialogComponent } from '../sample-form-dialog/sample-form-dialog';
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog';
 
@@ -34,12 +36,13 @@ const THRESHOLDS = { unitWeight: 25, waterContent: 100, shearStrength: 800 };
   styleUrl: './sample-table.css',
 })
 export class SampleTableComponent {
-  private readonly dialog          = inject(MatDialog);
-  private readonly locationService = inject(LocationService);
-  private readonly sampleService   = inject(SampleService);
-  readonly filterService           = inject(FilterService);
+  private readonly dialog               = inject(MatDialog);
+  private readonly locationService      = inject(LocationService);
+  private readonly sampleService        = inject(SampleService);
+  readonly filterService                = inject(FilterService);
+  readonly unitSystemService            = inject(UnitSystemService);
+  readonly unitConversionService        = inject(UnitConversionService);
 
-  readonly unitSystem = signal<UnitSystem>('metric');
   readonly locations  = signal<Location[]>([]);
   readonly samples    = signal<Sample[]>([]);
   readonly hasMore    = signal(false);
@@ -87,7 +90,7 @@ export class SampleTableComponent {
 
   readonly displayColumns = ['id', 'location', 'date', 'unitWeight', 'waterContent', 'shearStrength', 'actions'];
 
-  readonly columnLabels = computed(() => UNIT_LABELS[this.unitSystem()]);
+  readonly columnLabels = computed(() => UNIT_LABELS[this.unitSystemService.selected()]);
 
   readonly exceededIds = computed(() => {
     const s = this.samples();
@@ -106,14 +109,6 @@ export class SampleTableComponent {
 
   getLocationName(locationId: string): string {
     return this.locations().find(l => l.id === locationId)?.name ?? locationId;
-  }
-
-  convertUnitWeight(v: number): number {
-    return this.unitSystem() === 'us' ? +(v * 6.36587).toFixed(2) : v;
-  }
-
-  convertShearStrength(v: number): number {
-    return this.unitSystem() === 'us' ? +(v * 20.8854).toFixed(2) : v;
   }
 
   isAnyExceeded(sample: Sample): boolean {

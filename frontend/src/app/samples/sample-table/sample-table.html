@@ -11,7 +11,7 @@
       </button>
     </div>
     <div class="header-right">
-      <app-unit-toggle [value]="unitSystem()" (valueChange)="unitSystem.set($event)" />
+      <app-unit-toggle />
       <mat-form-field appearance="outline" class="location-filter" subscriptSizing="dynamic">
         <mat-label>Location</mat-label>
         <mat-select [value]="filterService.selectedLocationId()" (selectionChange)="filterService.selectedLocationId.set($event.value)">
@@ -88,7 +88,7 @@
         <ng-container matColumnDef="unitWeight">
           <th mat-header-cell *matHeaderCellDef style="white-space:normal">{{ columnLabels().unitWeight }}</th>
           <td mat-cell *matCellDef="let s"              [class.exceeded-cell]="exceededIds().unitWeight.has(s.id)">
-            {{ convertUnitWeight(s.unitWeight) | number:'1.1-1' }}
+            {{ unitConversionService.convertUnitWeight(s.unitWeight) | number:'1.1-1' }}
             @if (exceededIds().unitWeight.has(s.id)) {
               <mat-icon class="warn-icon" matTooltip="Exceeds threshold">warning</mat-icon>
             }
@@ -110,7 +110,7 @@
         <ng-container matColumnDef="shearStrength">
           <th mat-header-cell *matHeaderCellDef style="white-space:normal">{{ columnLabels().shearStrength }}</th>
           <td mat-cell *matCellDef="let s"              [class.exceeded-cell]="exceededIds().shearStrength.has(s.id)">
-            {{ convertShearStrength(s.shearStrength) | number:'1.1-1' }}
+            {{ unitConversionService.convertShearStrength(s.shearStrength) | number:'1.1-1' }}
             @if (exceededIds().shearStrength.has(s.id)) {
               <mat-icon class="warn-icon" matTooltip="Exceeds threshold">warning</mat-icon>
             }
