@@ -24,18 +24,22 @@ public class SampleDomainService {
     private final LocationRepository locationRepository;
 
     public List<Sample> findAll() {
-        return sampleRepository.findAll();
+        List<Sample> samples = sampleRepository.findAll();
+        log.info("Found [{}] samples", samples.size());
+        return samples;
     }
 
     public Sample findById(UUID id) {
-        return sampleRepository.findById(id)
+        Sample sample = sampleRepository.findById(id)
                 .orElseThrow(() -> new SampleNotFoundException(id));
+        log.info("Found sample [{}]", sample);
+        return sample;
     }
 
     public Sample create(UUID locationId, Instant timestamp, double unitWeight, double waterContent, double shearStrength) {
         Location location = locationRepository.findById(locationId)
                 .orElseThrow(() -> new LocationNotFoundException(locationId));
-        return sampleRepository.save(Sample.builder()
+        Sample saved = sampleRepository.save(Sample.builder()
                 .location(location)
                 .timestamp(timestamp)
                 .zoneId(location.getZoneId())
@@ -43,13 +47,18 @@ public class SampleDomainService {
                 .waterContent(waterContent)
                 .shearStrength(shearStrength)
                 .build());
+        log.info("Created sample [{}] for location [{}, {}]", saved.getId(), location.getId(), location.getName());
+        return saved;
     }
 
     public Sample update(UUID id, UUID locationId, Instant timestamp, double unitWeight, double waterContent, double shearStrength) {
         Sample existing = findById(id);
         Location location = locationRepository.findById(locationId)
-                .orElseThrow(() -> new LocationNotFoundException(locationId));
-        return sampleRepository.save(Sample.builder()
+                .orElseThrow(() -> {
+                    log.error("Location not found id={}", locationId);
+                    return new LocationNotFoundException(locationId);
+                });
+        Sample saved = sampleRepository.save(Sample.builder()
                 .id(existing.getId())
                 .location(location)
                 .timestamp(timestamp)
@@ -58,12 +67,15 @@ public class SampleDomainService {
                 .waterContent(waterContent)
                 .shearStrength(shearStrength)
                 .build());
+        log.info("Updated sample [{}]", saved);
+        return saved;
     }
 
     public SamplePage findPage(UUID locationId, Instant afterTimestamp, UUID afterId, int limit) {
         List<Sample> fetched = sampleRepository.findPage(locationId, afterTimestamp, afterId, limit + 1);
         boolean hasMore = fetched.size() > limit;
         List<Sample> samples = hasMore ? fetched.subList(0, limit) : fetched;
+        log.info("Found page of [{}] samples, hasMore={}, locationId={}", samples.size(), hasMore, locationId);
         return SamplePage.builder()
                 .samples(samples)
                 .hasMore(hasMore)
@@ -72,5 +84,6 @@ public class SampleDomainService {
 
     public void deleteById(UUID id) {
         sampleRepository.deleteById(id);
+        log.info("Deleted sample with id [{}]", id);
     }
 }

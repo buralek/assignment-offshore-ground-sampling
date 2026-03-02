@@ -1,6 +1,6 @@
-import { Component, model } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import {UnitSystem} from '../../shared/models/unit-system.model';
+import { UnitSystemService } from '../../shared/services/unit-system.service';
 
 @Component({
   selector: 'app-unit-toggle',
@@ -9,5 +9,5 @@ import {UnitSystem} from '../../shared/models/unit-system.model';
   styleUrl: './unit-toggle.css',
 })
 export class UnitToggleComponent {
-  readonly value = model<UnitSystem>('metric');
+  readonly unitSystemService = inject(UnitSystemService);
 }

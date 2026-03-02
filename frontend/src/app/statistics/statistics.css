@@ -40,6 +40,11 @@
   color: #b45309;
 }
 
+.stat-threshold {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
 @media (max-width: 900px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);

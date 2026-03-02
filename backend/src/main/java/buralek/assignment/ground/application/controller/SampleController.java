@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/samples")
 @RequiredArgsConstructor
@@ -39,12 +41,14 @@ public class SampleController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new sample")
     public SampleResponse createSample(@Valid @RequestBody SampleRequest request) {
+        log.info("Creating sample for locationId={}", request.getLocationId());
         return sampleApplicationService.createSample(request);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get sample by ID")
     public SampleResponse getSample(@PathVariable UUID id) {
+        log.info("Fetching sample id={}", id);
         return sampleApplicationService.getSampleById(id);
     }
 
@@ -55,6 +59,7 @@ public class SampleController {
             @RequestParam(required = false) Instant afterTimestamp,
             @RequestParam(required = false) UUID afterId,
             @RequestParam(defaultValue = "10") @Min(1) @Max(100) int limit) {
+        log.info("Fetching samples page locationId={}, limit={}, afterTimestamp={}", locationId, limit, afterTimestamp);
         return sampleApplicationService.getSamplesPage(locationId, afterTimestamp, afterId, limit);
     }
 
@@ -63,6 +68,7 @@ public class SampleController {
     public SampleResponse updateSample(
             @PathVariable UUID id,
             @Valid @RequestBody SampleRequest request) {
+        log.info("Updating sample id={}", id);
         return sampleApplicationService.updateSample(id, request);
     }
 
@@ -70,6 +76,7 @@ public class SampleController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete sample")
     public void deleteSample(@PathVariable UUID id) {
+        log.info("Deleting sample id={}", id);
         sampleApplicationService.deleteSample(id);
     }
 }

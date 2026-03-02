@@ -6,10 +6,18 @@ export interface SampleSurpassingThreshold {
   shearStrength: string[];
 }
 
+// Mirrors SampleThresholdDto.java
+export interface SampleThreshold {
+  unitWeight: number;
+  waterContent: number;
+  shearStrength: number;
+}
+
 // Mirrors SampleStatisticResponse.java
 export interface SampleStatistics {
   filter: { locationId: string | null };
   averageWaterContent: number;
   totalSamples: number;
   samplesSurpassingThreshold: SampleSurpassingThreshold;
+  thresholds: SampleThreshold;
 }

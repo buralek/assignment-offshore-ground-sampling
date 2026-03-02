@@ -5,17 +5,20 @@ import buralek.assignment.ground.domain.model.SampleStatistics;
 import buralek.assignment.ground.domain.model.Threshold;
 import buralek.assignment.ground.domain.port.SampleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StatisticDomainService {
     private final SampleRepository sampleRepository;
 
     public SampleStatistics calculate(UUID locationId, Threshold threshold) {
+        log.info("Calculating statistics for location [{}] with threshold [{}]", locationId, threshold);
         List<Sample> samples = locationId != null
                 ? sampleRepository.findAllByLocationId(locationId)
                 : sampleRepository.findAll();
@@ -39,6 +42,16 @@ public class StatisticDomainService {
                 .filter(s -> s.getShearStrength() > threshold.getShearStrength())
                 .map(Sample::getId)
                 .toList();
+
+        log.info("Sample statistics: " +
+                        "average watter content [{}], " +
+                        "unit weight exceeding samples[{}], " +
+                        "water content exceeding samples [{}], " +
+                        "shear strength exceeding samples [{}] ",
+                averageWaterContent,
+                unitWeightExceeding.size(),
+                waterContentExceeding.size(),
+                shearStrengthExceeding.size());
 
         return SampleStatistics.builder()
                 .averageWaterContent(averageWaterContent)

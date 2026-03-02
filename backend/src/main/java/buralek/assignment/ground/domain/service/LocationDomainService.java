@@ -18,11 +18,15 @@ public class LocationDomainService {
     private final LocationRepository locationRepository;
 
     public List<Location> findAll() {
-        return locationRepository.findAll();
+        List<Location> locations = locationRepository.findAll();
+        log.info("Found {} locations", locations.size());
+        return locations;
     }
 
     public Location findById(UUID id) {
-        return locationRepository.findById(id)
+        Location location = locationRepository.findById(id)
                 .orElseThrow(() -> new LocationNotFoundException(id));
+        log.info("Found location [{}]", location);
+        return location;
     }
 }
