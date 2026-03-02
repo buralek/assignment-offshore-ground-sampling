@@ -8,6 +8,7 @@ import { FilterService } from '../shared/services/filter.service';
 import { SampleService } from '../shared/services/sample.service';
 import { UnitConversionService } from '../shared/services/unit-conversion.service';
 import { UnitSystemService } from '../shared/services/unit-system.service';
+import { LocationFilterComponent } from '../shared/components/location-filter/location-filter';
 import { UnitToggleComponent } from '../shared/components/unit-toggle/unit-toggle';
 
 const DATASET_STYLES = {
@@ -18,7 +19,7 @@ const DATASET_STYLES = {
 
 @Component({
   selector: 'app-graph',
-  imports: [MatCardModule, BaseChartDirective, UnitToggleComponent],
+  imports: [MatCardModule, BaseChartDirective, LocationFilterComponent, UnitToggleComponent],
   templateUrl: './graph.html',
   styleUrl: './graph.css',
 })
@@ -42,34 +43,27 @@ export class GraphComponent {
     [...this.allSamples()].sort((a, b) => a.depth - b.depth)
   );
 
-  private readonly xLabels = computed(() =>
-    this.sorted().map(s => s.depth.toFixed(1))
-  );
-
   readonly unitWeightChartData = computed<ChartData<'line'>>(() => ({
-    labels: this.xLabels(),
     datasets: [{
       ...DATASET_STYLES.unitWeight,
       label: UNIT_LABELS[this.unitSystemService.selected()]['unitWeight'],
-      data: this.sorted().map(s => this.unitConversionService.convertUnitWeight(s.unitWeight)),
+      data: this.sorted().map(s => ({ x: s.depth, y: this.unitConversionService.convertUnitWeight(s.unitWeight) })),
     }],
   }));
 
   readonly waterContentChartData = computed<ChartData<'line'>>(() => ({
-    labels: this.xLabels(),
     datasets: [{
       ...DATASET_STYLES.waterContent,
       label: UNIT_LABELS[this.unitSystemService.selected()]['waterContent'],
-      data: this.sorted().map(s => s.waterContent),
+      data: this.sorted().map(s => ({ x: s.depth, y: s.waterContent })),
     }],
   }));
 
   readonly shearStrengthChartData = computed<ChartData<'line'>>(() => ({
-    labels: this.xLabels(),
     datasets: [{
       ...DATASET_STYLES.shearStrength,
       label: UNIT_LABELS[this.unitSystemService.selected()]['shearStrength'],
-      data: this.sorted().map(s => this.unitConversionService.convertShearStrength(s.shearStrength)),
+      data: this.sorted().map(s => ({ x: s.depth, y: this.unitConversionService.convertShearStrength(s.shearStrength) })),
     }],
   }));
 
@@ -83,7 +77,7 @@ export class GraphComponent {
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { title: { display: true, text: 'Depth (m)' } },
+        x: { type: 'linear', title: { display: true, text: 'Depth (m)' } },
         y: { title: { display: true, text: yTitle } },
       },
     };

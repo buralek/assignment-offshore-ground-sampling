@@ -1,13 +1,12 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
+import { LocationFilterComponent } from '../../shared/components/location-filter/location-filter';
 import { UnitToggleComponent } from '../../shared/components/unit-toggle/unit-toggle';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Location } from '../../shared/models/location.model';
@@ -27,10 +26,10 @@ const THRESHOLDS = { unitWeight: 25, waterContent: 100, shearStrength: 800 };
   selector: 'app-sample-table',
   imports: [
     DatePipe, DecimalPipe,
-    MatButtonModule, MatCardModule, MatFormFieldModule,
+    MatButtonModule, MatCardModule,
     MatIconModule, MatProgressSpinnerModule,
-    MatSelectModule, MatTableModule, MatTooltipModule,
-    UnitToggleComponent,
+    MatTableModule, MatTooltipModule,
+    LocationFilterComponent, UnitToggleComponent,
   ],
   templateUrl: './sample-table.html',
   styleUrl: './sample-table.css',
