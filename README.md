@@ -29,7 +29,7 @@ A full-stack web application for managing offshore soil sampling measurements. S
 | Angular Material | 21 | UI component library |
 | TypeScript | 5.9 | Language |
 | RxJS | 7.8 | Reactive HTTP and async |
-| ng2-charts + Chart.js | latest | Line chart visualisation |
+| ng2-charts | 9.0.0 | Line chart visualisation |
 | Vitest | 4 | Unit testing |
 | Prettier | 3 | Code formatting |
 
