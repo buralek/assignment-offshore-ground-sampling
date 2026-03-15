@@ -12,15 +12,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Location } from '../../shared/models/location.model';
 import { Sample, SampleCursor, SampleRequest } from '../../shared/models/sample.model';
 import { UNIT_LABELS } from '../../shared/models/unit-system.model';
+import { SampleStatistics } from '../../shared/models/statistics.model';
 import { FilterService } from '../../shared/services/filter.service';
 import { LocationService } from '../../shared/services/location.service';
 import { SampleService } from '../../shared/services/sample.service';
+import { StatisticsService } from '../../shared/services/statistics.service';
 import { UnitConversionService } from '../../shared/services/unit-conversion.service';
 import { UnitSystemService } from '../../shared/services/unit-system.service';
 import { SampleFormDialogComponent } from '../sample-form-dialog/sample-form-dialog';
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog';
-
-const THRESHOLDS = { unitWeight: 25, waterContent: 100, shearStrength: 800 };
 
 @Component({
   selector: 'app-sample-table',
@@ -38,12 +38,14 @@ export class SampleTableComponent {
   private readonly dialog               = inject(MatDialog);
   private readonly locationService      = inject(LocationService);
   private readonly sampleService        = inject(SampleService);
+  private readonly statisticsService    = inject(StatisticsService);
   readonly filterService                = inject(FilterService);
   readonly unitSystemService            = inject(UnitSystemService);
   readonly unitConversionService        = inject(UnitConversionService);
 
   readonly locations  = signal<Location[]>([]);
   readonly samples    = signal<Sample[]>([]);
+  readonly statistics = signal<SampleStatistics | null>(null);
   readonly hasMore    = signal(false);
   readonly loading    = signal(false);
   readonly error      = signal(false);
@@ -57,6 +59,14 @@ export class SampleTableComponent {
       this.samples.set([]);
       this.nextCursor.set(null);
       this.loadPage(locId, null);
+    });
+
+    effect(() => {
+      const locId = this.filterService.selectedLocationId();
+      this.filterService.mutationVersion();
+      this.statisticsService.get(locId).subscribe({
+        next: stats => this.statistics.set(stats),
+      });
     });
   }
 
@@ -92,11 +102,11 @@ export class SampleTableComponent {
   readonly columnLabels = computed(() => UNIT_LABELS[this.unitSystemService.selected()]);
 
   readonly exceededIds = computed(() => {
-    const s = this.samples();
+    const surpassing = this.statistics()?.samplesSurpassingThreshold;
     return {
-      unitWeight:    new Set(s.filter(x => x.unitWeight    > THRESHOLDS.unitWeight).map(x => x.id)),
-      waterContent:  new Set(s.filter(x => x.waterContent  > THRESHOLDS.waterContent).map(x => x.id)),
-      shearStrength: new Set(s.filter(x => x.shearStrength > THRESHOLDS.shearStrength).map(x => x.id)),
+      unitWeight:    new Set(surpassing?.unitWeight    ?? []),
+      waterContent:  new Set(surpassing?.waterContent  ?? []),
+      shearStrength: new Set(surpassing?.shearStrength ?? []),
     };
   });
 

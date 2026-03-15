@@ -13,4 +13,8 @@ export class UnitConversionService {
   convertShearStrength(v: number): number {
     return +(v * UNIT_CONVERSIONS[this.unitSystemService.selected()].shearStrength).toFixed(2);
   }
+
+  convertDepth(v: number): number {
+    return +(v * UNIT_CONVERSIONS[this.unitSystemService.selected()].depth).toFixed(2);
+  }
 }

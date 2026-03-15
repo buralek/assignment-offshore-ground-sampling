@@ -6,9 +6,9 @@ export const UNIT_LABELS: Record<UnitSystem, { depth: string; unitWeight: string
 };
 
 // Multipliers to apply when converting FROM metric TO the given system
-export const UNIT_CONVERSIONS: Record<UnitSystem, { unitWeight: number; shearStrength: number }> = {
-  metric: { unitWeight: 1,       shearStrength: 1 },
-  us:     { unitWeight: 6.36587, shearStrength: 20.8854 },
+export const UNIT_CONVERSIONS: Record<UnitSystem, { unitWeight: number; shearStrength: number, depth: number }> = {
+  metric: { unitWeight: 1,       shearStrength: 1 , depth: 1},
+  us:     { unitWeight: 6.36587, shearStrength: 20.8854, depth: 3.28 },
 };
 
 // Short unit symbols for display (e.g. threshold labels)
